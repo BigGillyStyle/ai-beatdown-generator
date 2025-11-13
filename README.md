@@ -11,7 +11,7 @@ PNPM workspace for AI beatdown generation tools.
 
 ```bash
 # Install PNPM if you haven't already
-npm install -g pnpm@10.22.0
+https://pnpm.io/installation
 
 # Install dependencies
 pnpm install
