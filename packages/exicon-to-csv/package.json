@@ -4,15 +4,20 @@
   "description": "Convert exicon data to CSV format",
   "type": "module",
   "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
   "scripts": {
     "build": "tsc",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "test": "node --test dist/**/*.test.js"
   },
   "dependencies": {
     "json-2-csv": "catalog:"
   },
   "devDependencies": {
     "@tsconfig/node24": "catalog:",
+    "@types/node": "catalog:",
     "typescript": "catalog:"
   }
 }

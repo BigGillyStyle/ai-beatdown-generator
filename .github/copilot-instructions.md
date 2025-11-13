@@ -8,8 +8,8 @@ This is a PNPM monorepo for generating F3 workout "beatdowns" using AI. F3 is a 
 
 **Monorepo Layout:**
 
-- `apps/` - Standalone applications (currently: `exicon-to-csv` for converting exercise data)
-- `packages/` - Shared libraries (empty, ready for common code)
+- `apps/` - Standalone applications (currently empty)
+- `packages/` - Shared libraries (currently: `exicon-to-csv` for converting exercise data to CSV)
 - Managed via PNPM workspace with centralized dependency catalog in `pnpm-workspace.yaml`
 
 **Key Design Decisions:**
@@ -18,6 +18,16 @@ This is a PNPM monorepo for generating F3 workout "beatdowns" using AI. F3 is a 
 - Uses Node 24 LTS (`@tsconfig/node24`) with strict version requirements (`>=24.11.1`)
 - Outputs to `dist/` directories with `src/` → `dist/` compilation pattern
 - Dependencies managed through PNPM catalog for version consistency across workspace
+
+**Coding Conventions:**
+
+- Prefer functional code over classes unless stateful behavior is needed
+- Prefer simple, clear implementations over complex abstractions EVEN IF this results in longer code
+- Keep functions small and focused; break down complex logic into helper functions
+- Only one exported function per file
+- Use descriptive names for functions and variables to enhance readability
+- File names should reflect their primary exported function or purpose
+- Create tests using Node test runner (https://nodejs.org/api/test.html)
 
 ## Development Workflow
 
@@ -87,13 +97,15 @@ This project generates workout plans for F3 (Fitness, Fellowship, Faith). Key co
 
 - All packages use catalog versions (e.g., `"typescript": "catalog:"`)
 - Apps are standalone executables with entry at `dist/index.js`
+- Packages export via `exports` field in package.json
 - Build outputs are git-ignored (`dist/`, `.tsbuildinfo`)
-- No test infrastructure yet (tests should follow workspace recursive pattern when added)
+- Tests use Node.js test runner with recursive pattern
 
 **File Organization:**
 
-- Source code in `src/` subdirectories (not yet implemented in exicon-to-csv)
+- Source code in `src/` subdirectories
 - Configuration at package root (package.json, tsconfig.json)
+- Tests colocated with source files (\*.test.ts)
 - No linting/formatting setup yet (consider when adding)
 
 ## Integration Points
@@ -111,20 +123,3 @@ This project generates workout plans for F3 (Fitness, Fellowship, Faith). Key co
 4. Always use catalog dependencies for consistency
 5. Add recursive script to root package.json if needed (e.g., test, lint)
 6. Source files must be in `src/` directory for compilation to work
-
-## Current State
-
-**Implemented:**
-
-- Monorepo structure with PNPM workspace
-- Spec-driven development system in `specs/` (see `specs/README.md`)
-- exicon-to-csv app scaffolded (package.json, tsconfig only - no source code yet)
-- Build/clean infrastructure at root level
-
-**Not Yet Implemented:**
-
-- No source code in any apps/packages
-- No testing framework
-- No linting/formatting (ESLint, Prettier)
-- No CI/CD configuration
-- No environment variable handling patterns

@@ -19,9 +19,9 @@ pnpm install
 
 ## Workspace Structure
 
-- `apps/` - Applications
-  - `exicon-to-csv` - Convert exicon data to CSV format
-- `packages/` - Shared packages
+- `apps/` - Standalone applications
+- `packages/` - Shared libraries
+  - `exicon-to-csv` - Convert F3 exicon data to CSV format
 
 ## Spec-Driven Development
 
