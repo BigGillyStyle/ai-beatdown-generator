@@ -1,0 +1,1 @@
+{"name":"exicon-to-csv","version":"1.0.0","description":"Convert exicon data to CSV format","type":"module","main":"dist/index.js","scripts":{"build":"tsc","clean":"rm -rf dist"},"dependencies":{"json-2-csv":"catalog:"},"devDependencies":{"@tsconfig/node24":"catalog:","typescript":"catalog:"}}
