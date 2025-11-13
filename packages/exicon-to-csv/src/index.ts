@@ -1,25 +1,5 @@
 import { json2csv } from "json-2-csv";
-
-/**
- * ExiconExercise represents a single exercise from the F3 Exicon API
- */
-interface ExiconExercise {
-  name: string;
-  description: string;
-  tags?: Array<{
-    id: string;
-    name: string;
-  }>;
-}
-
-/**
- * Normalized exercise with cleaned data ready for CSV conversion
- */
-interface NormalizedExercise {
-  name: string;
-  description: string;
-  tags: string;
-}
+import type { NormalizedExercise } from "./types.js";
 
 /**
  * Fetches the latest F3 Exicon data from the API and converts it to CSV format.
