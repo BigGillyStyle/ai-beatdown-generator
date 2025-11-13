@@ -21,6 +21,23 @@ This is a PNPM monorepo for generating F3 workout "beatdowns" using AI. F3 is a 
 
 ## Development Workflow
 
+**Spec-Driven Development:**
+
+This project uses lightweight specs stored in `specs/` for substantial changes. Before implementing features:
+
+1. Check if a spec exists: `specs/YYYY-MM-DD--description.md`
+2. If user mentions "implement the spec" or references a spec file, read it fully
+3. Use the spec's "Acceptance Criteria" section as your implementation checklist
+4. Follow the "How" section for approach and technical details
+5. Small changes (typos, version bumps, single-line fixes) don't need specs
+
+**When implementing from a spec:**
+
+- Read the entire spec file first to understand context
+- Prioritize acceptance criteria - those are the testable requirements
+- Use specified file paths, CLI signatures, and data structures exactly as documented
+- If the spec has open questions or unclear areas, ask before proceeding
+
 **Package Manager:**
 
 - **MUST use PNPM** (v10.22+), never npm or yarn
@@ -100,6 +117,7 @@ This project generates workout plans for F3 (Fitness, Fellowship, Faith). Key co
 **Implemented:**
 
 - Monorepo structure with PNPM workspace
+- Spec-driven development system in `specs/` (see `specs/README.md`)
 - exicon-to-csv app scaffolded (package.json, tsconfig only - no source code yet)
 - Build/clean infrastructure at root level
 
