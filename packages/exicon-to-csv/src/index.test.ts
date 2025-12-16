@@ -1,6 +1,19 @@
 import assert from "node:assert";
 import { describe, it, mock } from "node:test";
 import { exiconToCsvString, fetchExiconData } from "./index.js";
+import { writeFile } from "node:fs/promises";
+import { loadTestMappingConfig } from "./load-test-mapping-config.js";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
+
+// Copy test mapping files over production files for testing
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const { tagMapping: testTagMapping, typePriority: testTypePriority } = await loadTestMappingConfig();
+
+// Overwrite production files with test files in dist/ for testing
+await writeFile(join(__dirname, "tag-to-type-mapping.json"), JSON.stringify(testTagMapping, null, 2));
+await writeFile(join(__dirname, "type-priority.json"), JSON.stringify(testTypePriority, null, 2));
 
 describe("exiconToCsvString", () => {
   it("should successfully convert valid exicon data to CSV with correct headers", async () => {
@@ -28,12 +41,13 @@ describe("exiconToCsvString", () => {
 
     const result = await exiconToCsvString();
 
-    // Verify CSV headers
-    assert.ok(result.includes("name,description,tags"));
+    // Verify CSV headers (new order: name, tags, type, description)
+    assert.ok(result.includes("name,tags,type,description"));
 
-    // Verify data rows
-    assert.ok(result.includes('Burpee,A full body exercise,"cardio, full-body"'));
-    assert.ok(result.includes("Merkin,A push-up,upper-body"));
+    // Verify data rows (new order includes type column)
+    // Format: Burpee,"cardio, full-body",cardio,A full body exercise
+    assert.ok(result.includes('Burpee,"cardio, full-body",cardio'));
+    assert.ok(result.includes("Merkin,upper-body,upper-body,A push-up"));
   });
 
   it("should handle exercises with no tags", async () => {
@@ -57,9 +71,9 @@ describe("exiconToCsvString", () => {
 
     const result = await exiconToCsvString();
 
-    // Both should have empty tags column
-    assert.ok(result.includes("Burpee,A full body exercise,"));
-    assert.ok(result.includes("Merkin,A push-up,"));
+    // Both should have empty tags and type columns (new order: name, tags, type, description)
+    assert.ok(result.includes("Burpee,,,A full body exercise"));
+    assert.ok(result.includes("Merkin,,,A push-up"));
   });
 
   it("should normalize whitespace and replace newlines with spaces", async () => {
@@ -421,10 +435,10 @@ describe("exiconToCsvFile", () => {
     const filename = basename(filePath);
     assert.match(filename, /^exicon_\d{4}-\d{2}-\d{2}\.csv$/);
 
-    // Verify file was created and contains correct content
+    // Verify file was created and contains correct content (new order: name, tags, type, description)
     const content = await readFile(filePath, "utf-8");
-    assert.ok(content.includes("name,description,tags"));
-    assert.ok(content.includes("Burpee,A full body exercise,cardio"));
+    assert.ok(content.includes("name,tags,type,description"));
+    assert.ok(content.includes("Burpee,cardio,cardio,A full body exercise"));
 
     // Cleanup
     await unlink(filePath);
@@ -458,10 +472,10 @@ describe("exiconToCsvFile", () => {
     const filename = basename(filePath);
     assert.strictEqual(filename, customFilename);
 
-    // Verify file was created and contains correct content
+    // Verify file was created and contains correct content (new order: name, tags, type, description)
     const content = await readFile(filePath, "utf-8");
-    assert.ok(content.includes("name,description,tags"));
-    assert.ok(content.includes("Merkin,A push-up,"));
+    assert.ok(content.includes("name,tags,type,description"));
+    assert.ok(content.includes("Merkin,,,A push-up"));
 
     // Cleanup
     await unlink(filePath);
@@ -499,10 +513,10 @@ describe("exiconToCsvFile", () => {
     // Verify the returned path matches our custom path (resolved)
     assert.strictEqual(filePath, customPath);
 
-    // Verify file was created and contains correct content
+    // Verify file was created and contains correct content (new order: name, tags, type, description)
     const content = await readFile(filePath, "utf-8");
-    assert.ok(content.includes("name,description,tags"));
-    assert.ok(content.includes("Squat,Lower body exercise,legs"));
+    assert.ok(content.includes("name,tags,type,description"));
+    assert.ok(content.includes("Squat,legs,lower-body,Lower body exercise"));
 
     // Cleanup
     await unlink(filePath);
@@ -571,5 +585,111 @@ describe("exiconToCsvFile", () => {
     await assert.rejects(async () => await exiconToCsvFile(), {
       message: /Failed to fetch exicon data/,
     });
+  });
+});
+
+describe("determineExerciseType", async () => {
+  const { determineExerciseType } = await import("./index.js");
+
+  const mockMapping: { [tagName: string]: string } = {
+    legs: "lower-body",
+    core: "core",
+    arms: "upper-body",
+    cardio: "cardio",
+    "full-body": "full-body",
+  };
+
+  const mockPriority: { priorities: string[] } = {
+    priorities: ["cardio", "upper-body", "lower-body", "core", "full-body"],
+  };
+
+  it("should return empty string when no tags", () => {
+    const result = determineExerciseType(undefined, mockMapping, mockPriority);
+    assert.strictEqual(result, "");
+  });
+
+  it("should return empty string when tags array is empty", () => {
+    const result = determineExerciseType([], mockMapping, mockPriority);
+    assert.strictEqual(result, "");
+  });
+
+  it("should return type for single matching tag", () => {
+    const tags = [{ id: "t1", name: "legs" }];
+    const result = determineExerciseType(tags, mockMapping, mockPriority);
+    assert.strictEqual(result, "lower-body");
+  });
+
+  it("should be case-insensitive when matching tags", () => {
+    const tags = [{ id: "t1", name: "LEGS" }];
+    const result = determineExerciseType(tags, mockMapping, mockPriority);
+    assert.strictEqual(result, "lower-body");
+  });
+
+  it("should return same type when multiple tags map to same type", () => {
+    const mapping: { [tagName: string]: string } = {
+      legs: "lower-body",
+      squats: "lower-body",
+    };
+    const tags = [
+      { id: "t1", name: "legs" },
+      { id: "t2", name: "squats" },
+    ];
+    const result = determineExerciseType(tags, mapping, mockPriority);
+    assert.strictEqual(result, "lower-body");
+  });
+
+  it("should use priority when multiple tags map to different types", () => {
+    const tags = [
+      { id: "t1", name: "legs" },
+      { id: "t2", name: "cardio" },
+    ];
+    const result = determineExerciseType(tags, mockMapping, mockPriority);
+    // cardio has higher priority than lower-body
+    assert.strictEqual(result, "cardio");
+  });
+
+  it("should throw error when tags exist but none match mapping", () => {
+    const tags = [{ id: "t1", name: "unknown-tag" }];
+    assert.throws(() => determineExerciseType(tags, mockMapping, mockPriority), /Exercise has tags \[unknown-tag\] but none match the tag-to-type mapping/);
+  });
+
+  it("should skip invalid tags and only process valid ones", () => {
+    const tags = [
+      { id: "t1", name: "" }, // invalid - empty name
+      { id: "t2", name: "   " }, // invalid - whitespace only
+      { id: "t3", name: "legs" }, // valid
+    ];
+    const result = determineExerciseType(tags, mockMapping, mockPriority);
+    assert.strictEqual(result, "lower-body");
+  });
+
+  it("should handle tags with whitespace around names", () => {
+    const tags = [{ id: "t1", name: "  legs  " }];
+    const result = determineExerciseType(tags, mockMapping, mockPriority);
+    assert.strictEqual(result, "lower-body");
+  });
+
+  it("should skip comment key in mapping", () => {
+    const mappingWithComment: { [tagName: string]: string } = {
+      comment: "This is a comment",
+      legs: "lower-body",
+    };
+    const tags = [{ id: "t1", name: "comment" }];
+    assert.throws(() => determineExerciseType(tags, mappingWithComment, mockPriority), /Exercise has tags \[comment\] but none match the tag-to-type mapping/);
+  });
+
+  it("should return first priority match when three types match", () => {
+    const mapping: { [tagName: string]: string } = {
+      tag1: "cardio",
+      tag2: "upper-body",
+      tag3: "lower-body",
+    };
+    const tags = [
+      { id: "t1", name: "tag3" }, // lower-body
+      { id: "t2", name: "tag1" }, // cardio (highest priority)
+      { id: "t3", name: "tag2" }, // upper-body
+    ];
+    const result = determineExerciseType(tags, mapping, mockPriority);
+    assert.strictEqual(result, "cardio");
   });
 });

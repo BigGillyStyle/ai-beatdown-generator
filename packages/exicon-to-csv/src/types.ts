@@ -17,4 +17,19 @@ export interface NormalizedExercise {
   name: string;
   description: string;
   tags: string;
+  type: string;
+}
+
+/**
+ * Configuration for tag-to-type mapping
+ */
+export interface TagToTypeMapping {
+  [tagName: string]: string;
+}
+
+/**
+ * Configuration for type priority
+ */
+export interface TypePriority {
+  priorities: string[];
 }

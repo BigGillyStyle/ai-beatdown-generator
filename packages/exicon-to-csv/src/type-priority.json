@@ -1,0 +1,4 @@
+{
+  "comment": "Priority order for type resolution when an exercise has multiple type matches. First = highest priority.",
+  "priorities": ["format", "warmup", "mary", "exercise"]
+}

@@ -1,5 +1,7 @@
 import type { NormalizedExercise } from "./types.js";
 import { normalizeString, normalizeTags } from "./utils.js";
+import { loadMappingConfig } from "./load-mapping-config.js";
+import { determineExerciseType } from "./determine-exercise-type.js";
 
 /**
  * Fetches the latest F3 Exicon data from the API and returns normalized exercise data.
@@ -8,15 +10,21 @@ import { normalizeString, normalizeTags } from "./utils.js";
  * useful for consumers who want to process the data programmatically.
  *
  * The function will:
- * 1. Fetch exercise data from https://codex.f3nation.com/api/exicon
- * 2. Validate the JSON structure (array of objects with name/description/tags)
- * 3. Normalize and clean the data (trim whitespace, replace newlines, convert tags to string)
+ * 1. Load tag-to-type mapping configuration
+ * 2. Fetch exercise data from https://codex.f3nation.com/api/exicon
+ * 3. Validate the JSON structure (array of objects with name/description/tags)
+ * 4. Normalize and clean the data (trim whitespace, replace newlines, convert tags to string)
+ * 5. Determine exercise type based on tags and mapping
  *
- * @returns An array of normalized exercises with name, description, and tags (comma-separated string)
+ * @returns An array of normalized exercises with name, description, tags, and type
  * @throws Error if the API is unreachable or returns invalid data
  * @throws Error if the JSON cannot be parsed
+ * @throws Error if mapping configuration cannot be loaded
+ * @throws Error if an exercise has tags but none match the mapping
  */
 export async function fetchExiconData(): Promise<NormalizedExercise[]> {
+  // Load mapping configuration first
+  const { tagMapping, typePriority } = await loadMappingConfig();
   const API_URL = "https://codex.f3nation.com/api/exicon";
   const TIMEOUT_MS = 10000;
 
@@ -78,11 +86,15 @@ export async function fetchExiconData(): Promise<NormalizedExercise[]> {
       throw new Error(`Invalid exercise at index ${i}: missing or invalid 'description' field`);
     }
 
+    // Determine type BEFORE normalizing tags (need raw array)
+    const type = determineExerciseType(exercise.tags, tagMapping, typePriority);
+
     // Normalize the data
     const normalizedExercise: NormalizedExercise = {
       name: normalizeString(exercise.name),
       description: normalizeString(exercise.description),
       tags: normalizeTags(exercise.tags),
+      type: type,
     };
 
     normalizedExercises.push(normalizedExercise);
