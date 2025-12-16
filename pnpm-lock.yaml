@@ -12,9 +12,6 @@ catalogs:
     '@types/node':
       specifier: ^24.0.0
       version: 24.10.1
-    csv-parse:
-      specifier: ^5.6.0
-      version: 5.6.0
     json-2-csv:
       specifier: ^5.5.6
       version: 5.5.10
@@ -35,9 +32,6 @@ importers:
 
   packages/exicon-to-csv:
     dependencies:
-      csv-parse:
-        specifier: 'catalog:'
-        version: 5.6.0
       json-2-csv:
         specifier: 'catalog:'
         version: 5.5.10
@@ -219,9 +213,6 @@ packages:
   '@types/node@24.10.1':
     resolution: {integrity: sha512-GNWcUTRBgIRJD5zj+Tq0fKOJ5XZajIiBroOF0yvj2bSU1WvNdYS/dn9UxwsujGW4JX06dnHyjV2y9rRaybH0iQ==}
 
-  csv-parse@5.6.0:
-    resolution: {integrity: sha512-l3nz3euub2QMg5ouu5U09Ew9Wf6/wQ8I++ch1loQ0ljmzhmfZYrH9fflS22i/PQEvsPvxCwxgz5q7UB8K1JO4Q==}
-
   deeks@3.1.0:
     resolution: {integrity: sha512-e7oWH1LzIdv/prMQ7pmlDlaVoL64glqzvNgkgQNgyec9ORPHrT2jaOqMtRyqJuwWjtfb6v+2rk9pmaHj+F137A==}
     engines: {node: '>= 16'}
@@ -348,8 +339,6 @@ snapshots:
   '@types/node@24.10.1':
     dependencies:
       undici-types: 7.16.0
-
-  csv-parse@5.6.0: {}
 
   deeks@3.1.0: {}
 
