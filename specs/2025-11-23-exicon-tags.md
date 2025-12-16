@@ -1,4 +1,4 @@
-# [Short Title]
+# Extract Unique Tags from F3 Exicon JSON Data
 
 **Author:** Andy Pickler
 **Date:** 2025-11-23
