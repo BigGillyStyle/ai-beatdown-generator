@@ -1,0 +1,22 @@
+# Lefthook configuration for pre-commit hooks
+# See: https://github.com/evilmartians/lefthook
+
+pre-commit:
+  parallel: false # Run commands sequentially to ensure proper file staging
+
+  commands:
+    lint-and-fix:
+      # Lint and fix only staged TypeScript/JavaScript files
+      glob: "*.{ts,tsx,js,jsx,mjs,cjs}"
+      run: pnpm eslint {staged_files} --fix
+      stage_fixed: true # Re-stage files after fixing
+
+    format:
+      # Format only staged files
+      glob: "*.{ts,tsx,js,jsx,mjs,cjs,json,md,yml,yaml}"
+      run: pnpm prettier --write {staged_files}
+      stage_fixed: true # Re-stage formatted files
+
+    typecheck:
+      # Run type checking on entire workspace
+      run: pnpm typecheck

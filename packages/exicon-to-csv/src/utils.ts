@@ -17,12 +17,7 @@ export function normalizeTags(tags: unknown): string {
 
   const tagNames = tags
     .filter((tag): tag is { name: string } => {
-      return (
-        typeof tag === "object" &&
-        tag !== null &&
-        typeof tag.name === "string" &&
-        tag.name.trim().length > 0
-      );
+      return typeof tag === "object" && tag !== null && typeof tag.name === "string" && tag.name.trim().length > 0;
     })
     .map((tag) => normalizeString(tag.name));
 

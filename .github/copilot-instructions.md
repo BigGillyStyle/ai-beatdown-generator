@@ -61,6 +61,11 @@ This project uses lightweight specs stored in `specs/` for substantial changes. 
 pnpm install          # Install all workspace dependencies
 pnpm build            # Build all apps/packages recursively (-r flag)
 pnpm clean            # Clean all dist/ directories
+pnpm lint             # Check for linting errors
+pnpm lint:fix         # Automatically fix linting errors
+pnpm format           # Format all files with Prettier
+pnpm format:check     # Check formatting without modifying files
+pnpm typecheck        # Run TypeScript type checking
 ```
 
 **Adding Apps/Packages:**
@@ -108,7 +113,15 @@ This project generates workout plans for F3 (Fitness, Fellowship, Faith). Key co
 - Source code in `src/` subdirectories
 - Configuration at package root (package.json, tsconfig.json)
 - Tests colocated with source files (\*.test.ts)
-- No linting/formatting setup yet (consider when adding)
+
+**Code Quality:**
+
+- ESLint enforces TypeScript best practices using flat config ([eslint.config.mjs](../eslint.config.mjs))
+- Prettier handles code formatting (2-space tabs, 180 char width, LF line endings)
+- Pre-commit hooks via Lefthook automatically lint and format staged files
+- Use `pnpm lint:fix` before committing to auto-fix issues
+- Use `pnpm format` to format entire workspace
+- Pre-commit hook runs typecheck to catch type errors before commit
 
 ## Integration Points
 

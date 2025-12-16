@@ -15,12 +15,14 @@ The date prefix keeps files in chronological order.
 ## When to Write a Spec
 
 **Write a spec for:**
+
 - New features or tools
 - Changes affecting multiple files
 - Database or data structure changes
 - New CLI commands or APIs
 
 **Skip specs for:**
+
 - Typo fixes
 - README updates
 - Dependency version bumps
@@ -42,6 +44,7 @@ That's it. No need for 20 sections. Keep it brief and clear.
 ## Working with Copilot
 
 To get Copilot to implement your spec:
+
 1. Write your spec file
 2. Tell Copilot: "Implement the spec at `specs/2025-11-13--my-feature.md`"
 3. Copilot will build it based on your acceptance criteria

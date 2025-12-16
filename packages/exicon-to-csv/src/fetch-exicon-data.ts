@@ -34,9 +34,7 @@ export async function fetchExiconData(): Promise<NormalizedExercise[]> {
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      throw new Error(
-        `API request failed with status ${response.status}: ${response.statusText}`
-      );
+      throw new Error(`API request failed with status ${response.status}: ${response.statusText}`);
     }
   } catch (error) {
     if (error instanceof Error) {
@@ -52,7 +50,7 @@ export async function fetchExiconData(): Promise<NormalizedExercise[]> {
 
   try {
     data = await response.json();
-  } catch (error) {
+  } catch (_error) {
     throw new Error("Failed to parse JSON response from API");
   }
 
@@ -73,15 +71,11 @@ export async function fetchExiconData(): Promise<NormalizedExercise[]> {
     }
 
     if (typeof exercise.name !== "string") {
-      throw new Error(
-        `Invalid exercise at index ${i}: missing or invalid 'name' field`
-      );
+      throw new Error(`Invalid exercise at index ${i}: missing or invalid 'name' field`);
     }
 
     if (typeof exercise.description !== "string") {
-      throw new Error(
-        `Invalid exercise at index ${i}: missing or invalid 'description' field`
-      );
+      throw new Error(`Invalid exercise at index ${i}: missing or invalid 'description' field`);
     }
 
     // Normalize the data

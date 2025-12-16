@@ -32,9 +32,7 @@ describe("exiconToCsvString", () => {
     assert.ok(result.includes("name,description,tags"));
 
     // Verify data rows
-    assert.ok(
-      result.includes('Burpee,A full body exercise,"cardio, full-body"')
-    );
+    assert.ok(result.includes('Burpee,A full body exercise,"cardio, full-body"'));
     assert.ok(result.includes("Merkin,A push-up,upper-body"));
   });
 
@@ -226,8 +224,7 @@ describe("exiconToCsvString", () => {
     })) as any;
 
     await assert.rejects(async () => await exiconToCsvString(), {
-      message:
-        /Invalid exercise at index 0: missing or invalid 'description' field/,
+      message: /Invalid exercise at index 0: missing or invalid 'description' field/,
     });
   });
 
@@ -328,10 +325,7 @@ describe("fetchExiconData", () => {
     const result = await fetchExiconData();
 
     assert.strictEqual(result[0].name, "Burpee");
-    assert.strictEqual(
-      result[0].description,
-      "A full body exercise with multiple lines"
-    );
+    assert.strictEqual(result[0].description, "A full body exercise with multiple lines");
     assert.strictEqual(result[0].tags, "cardio");
   });
 
