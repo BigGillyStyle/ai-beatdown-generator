@@ -2,6 +2,9 @@ packages:
   - "apps/*"
   - "packages/*"
 
+onlyBuiltDependencies:
+  - lefthook
+
 catalog:
   typescript: ^5.7.2
   json-2-csv: ^5.5.6
