@@ -42,11 +42,11 @@ export async function exiconToCsvFile(filename?: string): Promise<string> {
   const csv = await generateExiconCsv();
 
   // Generate default filename if not provided
-  const finalFilename =
+  const resolvedFilename =
     filename ?? `exicon_${new Date().toISOString().substring(0, 10)}.csv`;
 
   // Resolve to absolute path
-  const absolutePath = resolve(finalFilename);
+  const absolutePath = resolve(resolvedFilename);
 
   // Write to file
   await writeFile(absolutePath, csv, "utf-8");
