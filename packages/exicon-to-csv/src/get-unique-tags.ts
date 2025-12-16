@@ -1,18 +1,12 @@
-import { parse } from "csv-parse/sync";
-import { exiconToCsvString } from "./index.js";
+import { fetchExiconData } from "./index.js";
 
 export async function getUniqueTags(): Promise<string> {
-  const csvString = await exiconToCsvString();
-
-  const records = parse(csvString, {
-    columns: true,
-    skip_empty_lines: true,
-  }) as Array<{ name: string; description: string; tags: string }>;
+  const exercises = await fetchExiconData();
 
   const uniqueTags = new Set<string>();
 
-  for (const record of records) {
-    const tagsValue = record.tags;
+  for (const exercise of exercises) {
+    const tagsValue = exercise.tags;
 
     if (!tagsValue || tagsValue.trim() === "") {
       continue;

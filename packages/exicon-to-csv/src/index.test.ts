@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import { describe, it, mock } from "node:test";
-import { exiconToCsvString } from "./index.js";
+import { exiconToCsvString, fetchExiconData } from "./index.js";
 
 describe("exiconToCsvString", () => {
   it("should successfully convert valid exicon data to CSV with correct headers", async () => {
@@ -241,6 +241,160 @@ describe("exiconToCsvString", () => {
 
     await assert.rejects(async () => await exiconToCsvString(), {
       message: /Invalid exercise at index 0: expected an object/,
+    });
+  });
+});
+
+describe("fetchExiconData", () => {
+  it("should return normalized exercise data as array", async () => {
+    const mockData = [
+      {
+        name: "Burpee",
+        description: "A full body exercise",
+        tags: [
+          { id: "1", name: "cardio" },
+          { id: "2", name: "full-body" },
+        ],
+      },
+      {
+        name: "Merkin",
+        description: "A push-up",
+        tags: [{ id: "3", name: "upper-body" }],
+      },
+    ];
+
+    global.fetch = mock.fn(async () => ({
+      ok: true,
+      json: async () => mockData,
+    })) as any;
+
+    const result = await fetchExiconData();
+
+    // Verify array structure
+    assert.strictEqual(Array.isArray(result), true);
+    assert.strictEqual(result.length, 2);
+
+    // Verify first exercise
+    assert.strictEqual(result[0].name, "Burpee");
+    assert.strictEqual(result[0].description, "A full body exercise");
+    assert.strictEqual(result[0].tags, "cardio, full-body");
+
+    // Verify second exercise
+    assert.strictEqual(result[1].name, "Merkin");
+    assert.strictEqual(result[1].description, "A push-up");
+    assert.strictEqual(result[1].tags, "upper-body");
+  });
+
+  it("should handle exercises with no tags", async () => {
+    const mockData = [
+      {
+        name: "Burpee",
+        description: "A full body exercise",
+        tags: [],
+      },
+      {
+        name: "Merkin",
+        description: "A push-up",
+        // No tags field at all
+      },
+    ];
+
+    global.fetch = mock.fn(async () => ({
+      ok: true,
+      json: async () => mockData,
+    })) as any;
+
+    const result = await fetchExiconData();
+
+    // Both should have empty tags
+    assert.strictEqual(result[0].tags, "");
+    assert.strictEqual(result[1].tags, "");
+  });
+
+  it("should normalize whitespace and replace newlines", async () => {
+    const mockData = [
+      {
+        name: "  Burpee  ",
+        description: "A full body\nexercise with\nmultiple lines",
+        tags: [{ id: "1", name: "  cardio  " }],
+      },
+    ];
+
+    global.fetch = mock.fn(async () => ({
+      ok: true,
+      json: async () => mockData,
+    })) as any;
+
+    const result = await fetchExiconData();
+
+    assert.strictEqual(result[0].name, "Burpee");
+    assert.strictEqual(
+      result[0].description,
+      "A full body exercise with multiple lines"
+    );
+    assert.strictEqual(result[0].tags, "cardio");
+  });
+
+  it("should skip tags with missing or empty names", async () => {
+    const mockData = [
+      {
+        name: "Burpee",
+        description: "A full body exercise",
+        tags: [
+          { id: "1", name: "cardio" },
+          { id: "2" }, // Missing name
+          { id: "3", name: "" }, // Empty name
+          { id: "4", name: "   " }, // Whitespace only
+          { id: "5", name: "strength" },
+        ],
+      },
+    ];
+
+    global.fetch = mock.fn(async () => ({
+      ok: true,
+      json: async () => mockData,
+    })) as any;
+
+    const result = await fetchExiconData();
+
+    assert.strictEqual(result[0].tags, "cardio, strength");
+  });
+
+  it("should throw error when API is unreachable", async () => {
+    global.fetch = mock.fn(async () => {
+      throw new Error("Network error");
+    }) as any;
+
+    await assert.rejects(async () => await fetchExiconData(), {
+      message: /Failed to fetch exicon data/,
+    });
+  });
+
+  it("should throw error when data is not an array", async () => {
+    global.fetch = mock.fn(async () => ({
+      ok: true,
+      json: async () => ({ exercises: [] }),
+    })) as any;
+
+    await assert.rejects(async () => await fetchExiconData(), {
+      message: /Invalid exicon data: expected an array of exercises/,
+    });
+  });
+
+  it("should throw error when exercise is missing required fields", async () => {
+    const mockData = [
+      {
+        description: "Missing name field",
+      },
+    ];
+
+    global.fetch = mock.fn(async () => ({
+      ok: true,
+      json: async () => mockData,
+    })) as any;
+
+    await assert.rejects(async () => await fetchExiconData(), {
+      message: /Invalid exercise at index 0: missing or invalid 'name' field/,
     });
   });
 });

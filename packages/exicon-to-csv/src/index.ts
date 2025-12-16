@@ -3,6 +3,8 @@ import { writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import type { NormalizedExercise } from "./types.js";
 
+export type { ExiconExercise, NormalizedExercise } from "./types.js";
+
 /**
  * Fetches the latest F3 Exicon data from the API and converts it to CSV format.
  *
@@ -53,13 +55,21 @@ export async function exiconToCsvFile(filename?: string): Promise<string> {
 }
 
 /**
- * Shared logic to fetch, validate, normalize, and convert exicon data to CSV format.
+ * Fetches the latest F3 Exicon data from the API and returns normalized exercise data.
  *
- * @returns A CSV string with headers: name, description, tags
+ * This function provides direct access to the normalized exercise data without CSV conversion,
+ * useful for consumers who want to process the data programmatically.
+ *
+ * The function will:
+ * 1. Fetch exercise data from https://codex.f3nation.com/api/exicon
+ * 2. Validate the JSON structure (array of objects with name/description/tags)
+ * 3. Normalize and clean the data (trim whitespace, replace newlines, convert tags to string)
+ *
+ * @returns An array of normalized exercises with name, description, and tags (comma-separated string)
  * @throws Error if the API is unreachable or returns invalid data
  * @throws Error if the JSON cannot be parsed
  */
-async function generateExiconCsv(): Promise<string> {
+export async function fetchExiconData(): Promise<NormalizedExercise[]> {
   const API_URL = "https://codex.f3nation.com/api/exicon";
   const TIMEOUT_MS = 10000;
 
@@ -136,6 +146,19 @@ async function generateExiconCsv(): Promise<string> {
 
     normalizedExercises.push(normalizedExercise);
   }
+
+  return normalizedExercises;
+}
+
+/**
+ * Shared logic to fetch, validate, normalize, and convert exicon data to CSV format.
+ *
+ * @returns A CSV string with headers: name, description, tags
+ * @throws Error if the API is unreachable or returns invalid data
+ * @throws Error if the JSON cannot be parsed
+ */
+async function generateExiconCsv(): Promise<string> {
+  const normalizedExercises = await fetchExiconData();
 
   // Convert to CSV
   try {
