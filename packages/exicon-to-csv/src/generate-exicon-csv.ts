@@ -17,7 +17,7 @@ export async function generateExiconCsv(): Promise<string> {
       keys: ["name", "description", "tags"],
     });
     return csv;
-  } catch (error) {
+  } catch (_error) {
     throw new Error("Failed to convert exercises to CSV format");
   }
 }

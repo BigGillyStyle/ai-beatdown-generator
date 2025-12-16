@@ -22,8 +22,7 @@ export async function exiconToCsvFile(filename?: string): Promise<string> {
   const csv = await generateExiconCsv();
 
   // Generate default filename if not provided
-  const finalFilename =
-    filename ?? `exicon_${new Date().toISOString().substring(0, 10)}.csv`;
+  const finalFilename = filename ?? `exicon_${new Date().toISOString().substring(0, 10)}.csv`;
 
   // Resolve to absolute path
   const absolutePath = resolve(finalFilename);
@@ -33,13 +32,9 @@ export async function exiconToCsvFile(filename?: string): Promise<string> {
     await writeFile(absolutePath, csv, "utf-8");
   } catch (error) {
     if (error instanceof Error) {
-      throw new Error(
-        `Failed to write CSV file to ${absolutePath}: ${error.message}`
-      );
+      throw new Error(`Failed to write CSV file to ${absolutePath}: ${error.message}`);
     }
-    throw new Error(
-      `Failed to write CSV file to ${absolutePath}: Unknown error`
-    );
+    throw new Error(`Failed to write CSV file to ${absolutePath}: Unknown error`);
   }
 
   return absolutePath;
