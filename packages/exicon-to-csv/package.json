@@ -10,14 +10,18 @@
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf dist",
-    "test": "node --test dist/**/*.test.js"
+    "test": "node --test dist/**/*.test.js",
+    "fetch": "tsx src/fetch-exicon.ts",
+    "tags": "tsx src/get-unique-tags.ts"
   },
   "dependencies": {
-    "json-2-csv": "catalog:"
+    "json-2-csv": "catalog:",
+    "csv-parse": "catalog:"
   },
   "devDependencies": {
     "@tsconfig/node24": "catalog:",
     "@types/node": "catalog:",
+    "tsx": "catalog:",
     "typescript": "catalog:"
   }
 }
