@@ -25,8 +25,8 @@ This is a PNPM monorepo for generating F3 workout "beatdowns" using AI. F3 is a 
 - Prefer simple, clear implementations over complex abstractions EVEN IF this results in longer code
 - Keep functions small and focused; break down complex logic into helper functions
 - Only one exported function per file
-- **Exported function must be at the top of the file** (before helper functions)
-- **TypeScript types and interfaces must be in separate `types.ts` files**, not colocated with implementation
+- Exported function must be at the top of the file (before helper functions)
+- TypeScript types and interfaces must be in separate `types.ts` files, not colocated with implementation
 - Use descriptive names for functions and variables to enhance readability
 - File names should reflect their primary exported function or purpose
 - Create tests using Node test runner (https://nodejs.org/api/test.html)
