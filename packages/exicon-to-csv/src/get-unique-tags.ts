@@ -25,6 +25,3 @@ export async function getUniqueTags(): Promise<string> {
 
   return sortedTags.join(", ");
 }
-
-const tags = await getUniqueTags();
-console.log(tags);

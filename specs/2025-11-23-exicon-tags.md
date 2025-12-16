@@ -18,8 +18,8 @@
 ## How
 
 **Approach:**
-- Call the `exiconToCsvString` function in the @packages/exicon-to-csv/src/index.ts file
-- Iterate through the values in the "tags" column, where each "tags" value is itself a comma-separated list of "tags"
+- Call the `fetchExiconData` function to get normalized exercise data
+- Iterate through the exercises and extract tags from the `tags` field (comma-separated string)
 - Determine the unique set of tags
 - Return the tags as a comma-delimited string
 

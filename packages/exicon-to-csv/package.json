@@ -11,12 +11,11 @@
     "build": "tsc",
     "clean": "rm -rf dist",
     "test": "node --test dist/**/*.test.js",
-    "fetch": "tsx src/fetch-exicon.ts",
-    "tags": "tsx src/get-unique-tags.ts"
+    "fetch": "tsx src/scripts/fetch-exicon-script.ts",
+    "tags": "tsx src/scripts/get-unique-tags-script.ts"
   },
   "dependencies": {
-    "json-2-csv": "catalog:",
-    "csv-parse": "catalog:"
+    "json-2-csv": "catalog:"
   },
   "devDependencies": {
     "@tsconfig/node24": "catalog:",

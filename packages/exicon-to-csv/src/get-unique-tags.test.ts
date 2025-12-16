@@ -219,4 +219,27 @@ describe("getUniqueTags", () => {
       message: /API request timed out after 10000ms/,
     });
   });
+
+  it("should handle tags with special characters (commas, quotes)", async () => {
+    const mockData = [
+      {
+        name: "Exercise",
+        description: "Description",
+        tags: [
+          { id: "1", name: 'tag-with-"quotes"' },
+          { id: "2", name: "normal-tag" },
+        ],
+      },
+    ];
+
+    global.fetch = mock.fn(async () => ({
+      ok: true,
+      json: async () => mockData,
+    })) as any;
+
+    const result = await getUniqueTags();
+
+    // Should preserve special characters in tag names
+    assert.strictEqual(result, 'normal-tag, tag-with-"quotes"');
+  });
 });
