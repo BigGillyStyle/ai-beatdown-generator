@@ -8,7 +8,7 @@
     ".": "./dist/index.js"
   },
   "scripts": {
-    "build": "tsc && cp src/*.json dist/",
+    "build": "tsc && cpy 'src/*.json' dist/",
     "clean": "rm -rf dist",
     "test": "node --test dist/**/*.test.js",
     "typecheck": "tsc --noEmit",
@@ -21,6 +21,7 @@
   "devDependencies": {
     "@tsconfig/node24": "catalog:",
     "@types/node": "catalog:",
+    "cpy-cli": "^5.0.0",
     "tsx": "catalog:",
     "typescript": "catalog:"
   }

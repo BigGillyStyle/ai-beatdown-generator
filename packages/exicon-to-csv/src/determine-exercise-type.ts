@@ -52,7 +52,7 @@ export function determineExerciseType(tags: Array<{ id: string; name: string }> 
   // Error if tags exist but none match
   if (matchedTypes.size === 0) {
     const tagList = validTagNames.join(", ");
-    throw new Error(`Exercise has tags [${tagList}] but none match the tag-to-type mapping. ` + `Please add mappings for these tags or remove them from the exercise.`);
+    throw new Error(`Exercise has tags [${tagList}] but none match the tag-to-type mapping. Please add mappings for these tags or remove them from the exercise.`);
   }
 
   // If only one type matched, return it
@@ -68,7 +68,7 @@ export function determineExerciseType(tags: Array<{ id: string; name: string }> 
     }
   }
 
-  // Fallback: if no priority match found, return the first matched type
-  // This handles the case where a type is in the mapping but not in the priority list
-  return Array.from(matchedTypes)[0];
+  // If we get here, we have matched types but none are in the priority list
+  // This indicates a configuration error that must be fixed
+  throw new Error(`Matched types [${Array.from(matchedTypes).join(", ")}] but none are in the priority configuration. Please add these types to type-priority.json`);
 }

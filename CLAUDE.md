@@ -73,6 +73,10 @@ pnpm --filter exicon-to-csv run tags    # Get unique tags (exicon-to-csv)
 - Use Node.js test runner (`node --test`) - see https://nodejs.org/api/test.html
 - Tests must be compiled to `dist/` before running (run from compiled JS, not TS)
 
+**Development Environment**
+
+- All code must be executable on Mac, Linux, and Windows
+
 ## Spec-Driven Development
 
 This project uses lightweight specs in `specs/` for substantial changes.

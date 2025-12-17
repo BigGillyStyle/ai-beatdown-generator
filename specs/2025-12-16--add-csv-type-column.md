@@ -78,4 +78,4 @@ Higher priority types appear first in the array. When an exercise has multiple m
 
 How we know it's done:
 
-- [ ] When `pnpm --filter exicon-to-csv run fetch` is run, a new CSV file is created and all rows have a value for the "type" column
+- [ ] When `pnpm --filter exicon-to-csv run fetch` is run, a new CSV file is created and all rows have a type column value (empty string for exercises without tags, otherwise determined from tag mapping)
