@@ -1,7 +1,8 @@
 import { fetchExiconData } from "./index.js";
+import type { TagToTypeMapping, TypePriority } from "./types.js";
 
-export async function getUniqueTags(): Promise<string> {
-  const exercises = await fetchExiconData();
+export async function getUniqueTags(options?: { tagMapping?: TagToTypeMapping; typePriority?: TypePriority }): Promise<string> {
+  const exercises = await fetchExiconData(options);
 
   const uniqueTags = new Set<string>();
 

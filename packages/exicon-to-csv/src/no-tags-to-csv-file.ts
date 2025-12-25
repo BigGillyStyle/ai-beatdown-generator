@@ -1,36 +1,7 @@
-import { writeFile, mkdir, access } from "node:fs/promises";
+import { writeFile, mkdir } from "node:fs/promises";
 import { resolve, dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
 import { generateNoTagsCsv } from "./generate-no-tags-csv.js";
-
-/**
- * Finds the repository root by traversing up from the current file location.
- * Looks for pnpm-workspace.yaml as the indicator of the repo root.
- */
-async function getRepoRoot(): Promise<string> {
-  const __filename = fileURLToPath(import.meta.url);
-  let currentDir = dirname(__filename);
-
-  // Traverse up until we find the repo root (indicated by pnpm-workspace.yaml)
-  // Maximum 10 levels to prevent infinite loop
-  for (let i = 0; i < 10; i++) {
-    try {
-      // Check if pnpm-workspace.yaml exists in current directory
-      await access(join(currentDir, "pnpm-workspace.yaml"));
-      return currentDir;
-    } catch {
-      // Not found, go up one level
-      const parentDir = dirname(currentDir);
-      if (parentDir === currentDir) {
-        // Reached filesystem root without finding repo root
-        throw new Error("Could not find repository root (pnpm-workspace.yaml not found)");
-      }
-      currentDir = parentDir;
-    }
-  }
-
-  throw new Error("Could not find repository root after checking 10 levels");
-}
+import { getRepoRoot } from "./get-repo-root.js";
 
 /**
  * Fetches exicon data and writes exercises without tags to a CSV file.

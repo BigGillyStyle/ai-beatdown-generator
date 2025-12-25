@@ -1,7 +1,13 @@
-import type { NormalizedExercise } from "./types.js";
+import type { NormalizedExercise, TagToTypeMapping, TypePriority } from "./types.js";
 import { normalizeString, normalizeTags } from "./utils.js";
 import { loadMappingConfig } from "./load-mapping-config.js";
 import { determineExerciseType } from "./determine-exercise-type.js";
+
+// Module-level cache for mapping configuration (lazy-loaded on first call)
+let cachedConfig: {
+  tagMapping: TagToTypeMapping;
+  typePriority: TypePriority;
+} | null = null;
 
 /**
  * Fetches the latest F3 Exicon data from the API and returns normalized exercise data.
@@ -10,21 +16,38 @@ import { determineExerciseType } from "./determine-exercise-type.js";
  * useful for consumers who want to process the data programmatically.
  *
  * The function will:
- * 1. Load tag-to-type mapping configuration
+ * 1. Load tag-to-type mapping configuration (cached after first load)
  * 2. Fetch exercise data from https://codex.f3nation.com/api/exicon
  * 3. Validate the JSON structure (array of objects with name/description/tags)
  * 4. Normalize and clean the data (trim whitespace, replace newlines, convert tags to string)
  * 5. Determine exercise type based on tags and mapping
  *
+ * @param options - Optional configuration object
+ * @param options.tagMapping - Optional tag-to-type mapping (for testing or custom configs)
+ * @param options.typePriority - Optional type priority (for testing or custom configs)
  * @returns An array of normalized exercises with name, description, tags, and type
  * @throws Error if the API is unreachable or returns invalid data
  * @throws Error if the JSON cannot be parsed
  * @throws Error if mapping configuration cannot be loaded
  * @throws Error if an exercise has tags but none match the mapping
  */
-export async function fetchExiconData(): Promise<NormalizedExercise[]> {
-  // Load mapping configuration first
-  const { tagMapping, typePriority } = await loadMappingConfig();
+export async function fetchExiconData(options?: { tagMapping?: TagToTypeMapping; typePriority?: TypePriority }): Promise<NormalizedExercise[]> {
+  // Load or use injected configuration
+  let tagMapping: TagToTypeMapping;
+  let typePriority: TypePriority;
+
+  if (options?.tagMapping && options?.typePriority) {
+    // Use injected config (for testing)
+    tagMapping = options.tagMapping;
+    typePriority = options.typePriority;
+  } else {
+    // Load and cache config for production use
+    if (cachedConfig === null) {
+      cachedConfig = await loadMappingConfig();
+    }
+    tagMapping = cachedConfig.tagMapping;
+    typePriority = cachedConfig.typePriority;
+  }
   const API_URL = "https://codex.f3nation.com/api/exicon";
   const TIMEOUT_MS = 10000;
 
@@ -94,7 +117,7 @@ export async function fetchExiconData(): Promise<NormalizedExercise[]> {
       name: normalizeString(exercise.name),
       description: normalizeString(exercise.description),
       tags: normalizeTags(exercise.tags),
-      type: type,
+      type,
     };
 
     normalizedExercises.push(normalizedExercise);

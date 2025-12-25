@@ -6,6 +6,7 @@ export { fetchExiconData } from "./fetch-exicon-data.js";
 export { filterNoTagsExercises } from "./filter-no-tags-exercises.js";
 export { generateExiconCsv } from "./generate-exicon-csv.js";
 export { generateNoTagsCsv } from "./generate-no-tags-csv.js";
+export { getRepoRoot } from "./get-repo-root.js";
 export { getUniqueTags } from "./get-unique-tags.js";
 export { loadMappingConfig } from "./load-mapping-config.js";
 export { noTagsToCsvFile } from "./no-tags-to-csv-file.js";
