@@ -21,6 +21,14 @@ export interface NormalizedExercise {
 }
 
 /**
+ * Exercise with no tags, containing only name and description for CSV export
+ */
+export interface NoTagsExercise {
+  name: string;
+  description: string;
+}
+
+/**
  * Configuration for tag-to-type mapping.
  * Maps tag names to exercise types with case-insensitive matching.
  *

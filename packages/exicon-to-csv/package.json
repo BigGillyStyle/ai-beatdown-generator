@@ -13,6 +13,7 @@
     "test": "node --test dist/**/*.test.js",
     "typecheck": "tsc --noEmit",
     "fetch": "tsx src/scripts/fetch-exicon-script.ts",
+    "no-tags": "tsx src/scripts/no-tags-script.ts",
     "tags": "tsx src/scripts/get-unique-tags-script.ts"
   },
   "dependencies": {
