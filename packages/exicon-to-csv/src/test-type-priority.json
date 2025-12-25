@@ -1,0 +1,4 @@
+{
+  "comment": "Test priorities - DO NOT use in production",
+  "priorities": ["cardio", "full-body", "upper-body", "lower-body", "core", "strength", "flexibility", "test-type"]
+}

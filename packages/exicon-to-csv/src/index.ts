@@ -1,4 +1,12 @@
-export type { ExiconExercise, NormalizedExercise } from "./types.js";
-export { exiconToCsvString } from "./exicon-to-csv-string.js";
+export type { ExiconExercise, NormalizedExercise, NoTagsExercise, TagToTypeMapping, TypePriority } from "./types.js";
+export { determineExerciseType } from "./determine-exercise-type.js";
 export { exiconToCsvFile } from "./exicon-to-csv-file.js";
+export { exiconToCsvString } from "./exicon-to-csv-string.js";
 export { fetchExiconData } from "./fetch-exicon-data.js";
+export { filterNoTagsExercises } from "./filter-no-tags-exercises.js";
+export { generateExiconCsv } from "./generate-exicon-csv.js";
+export { generateNoTagsCsv } from "./generate-no-tags-csv.js";
+export { getRepoRoot } from "./get-repo-root.js";
+export { getUniqueTags } from "./get-unique-tags.js";
+export { loadMappingConfig } from "./load-mapping-config.js";
+export { noTagsToCsvFile } from "./no-tags-to-csv-file.js";

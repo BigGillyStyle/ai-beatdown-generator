@@ -1,6 +1,10 @@
 import assert from "node:assert";
 import { describe, it, mock } from "node:test";
 import { getUniqueTags } from "./get-unique-tags.js";
+import { loadTestMappingConfig } from "./load-test-mapping-config.js";
+
+// Load test mapping config once at module level
+const testConfig = await loadTestMappingConfig();
 
 describe("getUniqueTags", () => {
   it("should return unique tags in alphabetical order", async () => {
@@ -33,7 +37,7 @@ describe("getUniqueTags", () => {
       json: async () => mockData,
     })) as any;
 
-    const result = await getUniqueTags();
+    const result = await getUniqueTags(testConfig);
 
     // Should return alphabetically sorted, comma-delimited string
     assert.strictEqual(result, "cardio, full-body, legs, upper-body");
@@ -63,7 +67,7 @@ describe("getUniqueTags", () => {
       json: async () => mockData,
     })) as any;
 
-    const result = await getUniqueTags();
+    const result = await getUniqueTags(testConfig);
 
     // Should only return the one valid tag
     assert.strictEqual(result, "cardio");
@@ -87,7 +91,7 @@ describe("getUniqueTags", () => {
       json: async () => mockData,
     })) as any;
 
-    const result = await getUniqueTags();
+    const result = await getUniqueTags(testConfig);
 
     assert.strictEqual(result, "");
   });
@@ -125,7 +129,7 @@ describe("getUniqueTags", () => {
       json: async () => mockData,
     })) as any;
 
-    const result = await getUniqueTags();
+    const result = await getUniqueTags(testConfig);
 
     // Should have exactly 3 unique tags, alphabetically sorted
     assert.strictEqual(result, "cardio, flexibility, strength");
@@ -148,7 +152,7 @@ describe("getUniqueTags", () => {
       json: async () => mockData,
     })) as any;
 
-    const result = await getUniqueTags();
+    const result = await getUniqueTags(testConfig);
 
     // Tags should be trimmed (exiconToCsvString normalizes them)
     assert.strictEqual(result, "cardio, strength");
@@ -173,7 +177,7 @@ describe("getUniqueTags", () => {
       json: async () => mockData,
     })) as any;
 
-    const result = await getUniqueTags();
+    const result = await getUniqueTags(testConfig);
 
     // Should be sorted alphabetically, not in order of appearance
     assert.strictEqual(result, "aerobics, balance, mobility, zumba");
@@ -193,7 +197,7 @@ describe("getUniqueTags", () => {
       json: async () => mockData,
     })) as any;
 
-    const result = await getUniqueTags();
+    const result = await getUniqueTags(testConfig);
 
     assert.strictEqual(result, "cardio");
   });
@@ -203,7 +207,7 @@ describe("getUniqueTags", () => {
       throw new Error("Network error");
     }) as any;
 
-    await assert.rejects(async () => await getUniqueTags(), {
+    await assert.rejects(async () => await getUniqueTags(testConfig), {
       message: /Failed to fetch exicon data/,
     });
   });
@@ -215,7 +219,7 @@ describe("getUniqueTags", () => {
       throw error;
     }) as any;
 
-    await assert.rejects(async () => await getUniqueTags(), {
+    await assert.rejects(async () => await getUniqueTags(testConfig), {
       message: /API request timed out after 10000ms/,
     });
   });
@@ -237,7 +241,7 @@ describe("getUniqueTags", () => {
       json: async () => mockData,
     })) as any;
 
-    const result = await getUniqueTags();
+    const result = await getUniqueTags(testConfig);
 
     // Should preserve special characters in tag names
     assert.strictEqual(result, 'normal-tag, tag-with-"quotes"');

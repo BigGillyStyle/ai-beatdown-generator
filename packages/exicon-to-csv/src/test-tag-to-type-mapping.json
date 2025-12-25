@@ -1,0 +1,19 @@
+{
+  "comment": "Test mappings - DO NOT use in production",
+  "cardio": "cardio",
+  "full-body": "full-body",
+  "upper-body": "upper-body",
+  "legs": "lower-body",
+  "core": "core",
+  "arms": "upper-body",
+  "strength": "strength",
+  "zumba": "cardio",
+  "aerobics": "cardio",
+  "mobility": "flexibility",
+  "balance": "flexibility",
+  "tag1": "test-type",
+  "tag2": "test-type",
+  "tag,with,comma": "test-type",
+  "tag-with-\"quotes\"": "test-type",
+  "normal-tag": "test-type"
+}

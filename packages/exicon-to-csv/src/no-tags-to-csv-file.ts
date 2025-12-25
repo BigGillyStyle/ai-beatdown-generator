@@ -1,30 +1,28 @@
 import { writeFile, mkdir } from "node:fs/promises";
 import { resolve, dirname, join } from "node:path";
-import { generateExiconCsv } from "./generate-exicon-csv.js";
+import { generateNoTagsCsv } from "./generate-no-tags-csv.js";
 import { getRepoRoot } from "./get-repo-root.js";
 
 /**
- * Fetches the latest F3 Exicon data from the API and writes it to a CSV file.
+ * Fetches exicon data and writes exercises without tags to a CSV file.
  *
  * The function will:
- * 1. Load tag-to-type mapping configuration
- * 2. Fetch exercise data from https://codex.f3nation.com/api/exicon
- * 3. Validate the JSON structure (array of objects with name/description/tags)
- * 4. Normalize and clean the data (trim whitespace, replace newlines)
- * 5. Determine exercise type based on tags and mapping
- * 6. Convert to CSV with columns: name, tags, type, description
- * 7. Write the CSV data to a file in the output/ directory
+ * 1. Fetch and normalize all exercises
+ * 2. Filter to only exercises with no tags
+ * 3. Sort alphabetically by name
+ * 4. Convert to CSV with columns: name, description
+ * 5. Write to output/exicon-no-tags_YYYY-MM-DD.csv at repo root
+ * 6. Print summary to console showing count of no-tags exercises vs total
  *
- * @param filename - Optional filename or path for the CSV file. If not provided, defaults to "output/exicon_YYYY-MM-DD.csv" at the repo root
+ * @param filename - Optional filename or path for the CSV file. If not provided, defaults to "output/exicon-no-tags_YYYY-MM-DD.csv" at the repo root
  * @returns The absolute path to the written CSV file
  * @throws Error if the API is unreachable or returns invalid data
  * @throws Error if the JSON cannot be parsed
  * @throws Error if mapping configuration cannot be loaded
- * @throws Error if an exercise has tags but none match the mapping
  * @throws Error if the file cannot be written
  */
-export async function exiconToCsvFile(filename?: string): Promise<string> {
-  const csv = await generateExiconCsv();
+export async function noTagsToCsvFile(filename?: string): Promise<string> {
+  const { csv, noTagsCount, totalCount } = await generateNoTagsCsv();
 
   // Generate default filename with output/ directory at repo root if not provided
   let finalFilename: string;
@@ -32,7 +30,7 @@ export async function exiconToCsvFile(filename?: string): Promise<string> {
     finalFilename = filename;
   } else {
     const repoRoot = await getRepoRoot();
-    finalFilename = join(repoRoot, "output", `exicon_${new Date().toISOString().substring(0, 10)}.csv`);
+    finalFilename = join(repoRoot, "output", `exicon-no-tags_${new Date().toISOString().substring(0, 10)}.csv`);
   }
 
   // Resolve to absolute path
@@ -58,6 +56,9 @@ export async function exiconToCsvFile(filename?: string): Promise<string> {
     }
     throw new Error(`Failed to write CSV file to ${absolutePath}: Unknown error`);
   }
+
+  // Print summary to console
+  console.log(`Found ${noTagsCount} exercises without tags out of ${totalCount} total exercises. Wrote to ${absolutePath}`);
 
   return absolutePath;
 }
