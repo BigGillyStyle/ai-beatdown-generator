@@ -3,6 +3,7 @@
   "amrap": "format",
   "arms": "exercise",
   "back": "exercise",
+  "burpee": "exercise",
   "card deck": "format",
   "cardio": "format",
   "chest": "exercise",
@@ -24,6 +25,7 @@
   "shoulders": "exercise",
   "static": "format",
   "strength": "exercise",
+  "teams": "format",
   "timed": "format",
   "transport": "exercise",
   "warm-up": "warmup"
