@@ -43,6 +43,7 @@ pnpm --filter exicon-to-csv run tags    # Get unique tags (exicon-to-csv)
   - `exicon-to-csv` - Convert F3 exicon JSON data to CSV format
 - `specs/` - Markdown specifications for substantial changes
 - PNPM workspace with centralized dependency catalog in [pnpm-workspace.yaml](pnpm-workspace.yaml)
+  - All dependency versions should be referenced in pnpm-workspace.yaml. None of the individual apps/ or packages/ should refer to their own dependency versions.
 
 **Key Design Decisions:**
 

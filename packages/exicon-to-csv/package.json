@@ -22,7 +22,7 @@
   "devDependencies": {
     "@tsconfig/node24": "catalog:",
     "@types/node": "catalog:",
-    "cpy-cli": "^5.0.0",
+    "cpy-cli": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:"
   }
