@@ -172,7 +172,7 @@ Converts F3 exicon JSON data to CSV format. Key exports in [packages/exicon-to-c
 
 **Required:**
 
-- Node.js 24.12.0+ (see [.nvmrc](.nvmrc))
+- Node.js 24.14.0+ (see [.nvmrc](.nvmrc))
 - PNPM 10.26.0+ (enforced by packageManager field)
 
 **Recommended:**
