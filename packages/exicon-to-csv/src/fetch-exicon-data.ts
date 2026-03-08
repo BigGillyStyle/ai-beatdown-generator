@@ -63,10 +63,6 @@ export async function fetchExiconData(options?: { tagMapping?: TagToTypeMapping;
     });
 
     clearTimeout(timeoutId);
-
-    if (!response.ok) {
-      throw new Error(`API request failed with status ${response.status}: ${response.statusText}`);
-    }
   } catch (error) {
     if (error instanceof Error) {
       if (error.name === "AbortError") {
@@ -75,6 +71,10 @@ export async function fetchExiconData(options?: { tagMapping?: TagToTypeMapping;
       throw new Error(`Failed to fetch exicon data: ${error.message}`, { cause: error });
     }
     throw new Error("Failed to fetch exicon data: Unknown error", { cause: error });
+  }
+
+  if (!response.ok) {
+    throw new Error(`API request failed with status ${response.status}: ${response.statusText}`);
   }
 
   let data: unknown;

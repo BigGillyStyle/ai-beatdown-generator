@@ -41,6 +41,6 @@ export async function generateNoTagsCsv(options?: { tagMapping?: TagToTypeMappin
       totalCount,
     };
   } catch (error) {
-    throw new Error("Failed to convert exercises to CSV format", { cause: error });
+    throw new Error("Failed to convert no-tags exercises to CSV format", { cause: error });
   }
 }

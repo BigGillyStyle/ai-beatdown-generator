@@ -33,11 +33,6 @@ export async function loadMappingConfigFromFiles(
   try {
     const tagMappingContent = await readFile(tagMappingPath, "utf-8");
     tagMapping = JSON.parse(tagMappingContent);
-
-    // Validate structure (should be object with string values)
-    if (typeof tagMapping !== "object" || tagMapping === null) {
-      throw new Error(`${tagMappingFilename} must be a JSON object`);
-    }
   } catch (error) {
     if (error instanceof Error) {
       throw new Error(`Failed to load ${tagMappingFilename}: ${error.message}`, { cause: error });
@@ -45,20 +40,25 @@ export async function loadMappingConfigFromFiles(
     throw new Error(`Failed to load ${tagMappingFilename}: Unknown error`, { cause: error });
   }
 
+  // Validate structure (should be object with string values)
+  if (typeof tagMapping !== "object" || tagMapping === null) {
+    throw new Error(`${tagMappingFilename} must be a JSON object`);
+  }
+
   // Load type priority
   try {
     const typePriorityContent = await readFile(typePriorityPath, "utf-8");
     typePriority = JSON.parse(typePriorityContent);
-
-    // Validate structure (should have priorities array)
-    if (!Array.isArray(typePriority.priorities)) {
-      throw new Error(`${typePriorityFilename} must contain a 'priorities' array`);
-    }
   } catch (error) {
     if (error instanceof Error) {
       throw new Error(`Failed to load ${typePriorityFilename}: ${error.message}`, { cause: error });
     }
     throw new Error(`Failed to load ${typePriorityFilename}: Unknown error`, { cause: error });
+  }
+
+  // Validate structure (should have priorities array)
+  if (!Array.isArray(typePriority.priorities)) {
+    throw new Error(`${typePriorityFilename} must contain a 'priorities' array`);
   }
 
   return { tagMapping, typePriority };
