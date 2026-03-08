@@ -23,7 +23,7 @@ export async function generateExiconCsv(options?: { tagMapping?: TagToTypeMappin
       keys: ["name", "tags", "type", "description"],
     });
     return csv;
-  } catch (_error) {
-    throw new Error("Failed to convert exercises to CSV format");
+  } catch (error) {
+    throw new Error("Failed to convert exercises to CSV format", { cause: error });
   }
 }

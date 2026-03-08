@@ -63,26 +63,26 @@ export async function fetchExiconData(options?: { tagMapping?: TagToTypeMapping;
     });
 
     clearTimeout(timeoutId);
-
-    if (!response.ok) {
-      throw new Error(`API request failed with status ${response.status}: ${response.statusText}`);
-    }
   } catch (error) {
     if (error instanceof Error) {
       if (error.name === "AbortError") {
-        throw new Error(`API request timed out after ${TIMEOUT_MS}ms`);
+        throw new Error(`API request timed out after ${TIMEOUT_MS}ms`, { cause: error });
       }
-      throw new Error(`Failed to fetch exicon data: ${error.message}`);
+      throw new Error(`Failed to fetch exicon data: ${error.message}`, { cause: error });
     }
-    throw new Error("Failed to fetch exicon data: Unknown error");
+    throw new Error("Failed to fetch exicon data: Unknown error", { cause: error });
+  }
+
+  if (!response.ok) {
+    throw new Error(`API request failed with status ${response.status}: ${response.statusText}`);
   }
 
   let data: unknown;
 
   try {
     data = await response.json();
-  } catch (_error) {
-    throw new Error("Failed to parse JSON response from API");
+  } catch (error) {
+    throw new Error("Failed to parse JSON response from API", { cause: error });
   }
 
   // Validate that data is an array
