@@ -44,9 +44,9 @@ export async function exiconToCsvFile(filename?: string): Promise<string> {
     await mkdir(directory, { recursive: true });
   } catch (error) {
     if (error instanceof Error) {
-      throw new Error(`Failed to create directory ${directory}: ${error.message}`);
+      throw new Error(`Failed to create directory ${directory}: ${error.message}`, { cause: error });
     }
-    throw new Error(`Failed to create directory ${directory}: Unknown error`);
+    throw new Error(`Failed to create directory ${directory}: Unknown error`, { cause: error });
   }
 
   // Write the file with improved error handling
@@ -54,9 +54,9 @@ export async function exiconToCsvFile(filename?: string): Promise<string> {
     await writeFile(absolutePath, csv, "utf-8");
   } catch (error) {
     if (error instanceof Error) {
-      throw new Error(`Failed to write CSV file to ${absolutePath}: ${error.message}`);
+      throw new Error(`Failed to write CSV file to ${absolutePath}: ${error.message}`, { cause: error });
     }
-    throw new Error(`Failed to write CSV file to ${absolutePath}: Unknown error`);
+    throw new Error(`Failed to write CSV file to ${absolutePath}: Unknown error`, { cause: error });
   }
 
   return absolutePath;

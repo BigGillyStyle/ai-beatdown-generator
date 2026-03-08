@@ -40,9 +40,9 @@ export async function loadMappingConfigFromFiles(
     }
   } catch (error) {
     if (error instanceof Error) {
-      throw new Error(`Failed to load ${tagMappingFilename}: ${error.message}`);
+      throw new Error(`Failed to load ${tagMappingFilename}: ${error.message}`, { cause: error });
     }
-    throw new Error(`Failed to load ${tagMappingFilename}: Unknown error`);
+    throw new Error(`Failed to load ${tagMappingFilename}: Unknown error`, { cause: error });
   }
 
   // Load type priority
@@ -56,9 +56,9 @@ export async function loadMappingConfigFromFiles(
     }
   } catch (error) {
     if (error instanceof Error) {
-      throw new Error(`Failed to load ${typePriorityFilename}: ${error.message}`);
+      throw new Error(`Failed to load ${typePriorityFilename}: ${error.message}`, { cause: error });
     }
-    throw new Error(`Failed to load ${typePriorityFilename}: Unknown error`);
+    throw new Error(`Failed to load ${typePriorityFilename}: Unknown error`, { cause: error });
   }
 
   return { tagMapping, typePriority };
