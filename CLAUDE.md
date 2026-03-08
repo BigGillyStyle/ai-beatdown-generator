@@ -41,7 +41,6 @@ pnpm --filter exicon-to-csv run tags    # Get unique tags (exicon-to-csv)
 - `apps/` - Standalone applications (currently empty)
 - `packages/` - Shared libraries
   - `exicon-to-csv` - Convert F3 exicon JSON data to CSV format
-- `specs/` - Markdown specifications for substantial changes
 - PNPM workspace with centralized dependency catalog in [pnpm-workspace.yaml](pnpm-workspace.yaml)
   - All dependency versions should be referenced in pnpm-workspace.yaml. None of the individual apps/ or packages/ should refer to their own dependency versions.
 
@@ -78,32 +77,9 @@ pnpm --filter exicon-to-csv run tags    # Get unique tags (exicon-to-csv)
 
 - All code must be executable on Mac, Linux, and Windows
 
-## Spec-Driven Development
+## Feature Planning
 
-This project uses lightweight specs in `specs/` for substantial changes.
-
-**When to Write a Spec:**
-
-- New features or tools
-- Changes affecting multiple files
-- Database or data structure changes
-- New CLI commands or APIs
-
-**Skip specs for:**
-
-- Typo fixes, README updates, dependency bumps, single-line bug fixes
-
-**Spec Naming:** `specs/YYYY-MM-DD--short-description.md`
-
-**When Implementing from a Spec:**
-
-1. Read the entire spec file first
-2. Prioritize "Acceptance Criteria" section (testable requirements)
-3. Follow "How" section for approach and technical details
-4. Use specified file paths, CLI signatures, and data structures exactly as documented
-5. If spec has open questions or unclear areas, ask before proceeding
-
-See [specs/README.md](specs/README.md) for full guidelines and [specs/2025-11-13--template.md](specs/2025-11-13--template.md) for template.
+Features and bugs are tracked as epics and stories in GitHub Issues. Before implementing substantial changes, check for a corresponding issue and reference it in commits.
 
 ## Adding Apps/Packages
 

@@ -23,20 +23,6 @@ pnpm install
 - `packages/` - Shared libraries
   - `exicon-to-csv` - Convert F3 exicon data to CSV format
 
-## Spec-Driven Development
-
-Substantial changes are proposed and reviewed via Markdown specs stored under `specs/`.
-
-Spec naming convention:
-
-```
-specs/<area>/YYYY-MM-DD--kebab-case-slug.md
-```
-
-See `specs/README.md` for guidelines, required sections, status lifecycle, and authoring workflow.
-
-For small trivial changes (typos, minor version bumps) a spec is not required.
-
 ## Development
 
 ```bash
