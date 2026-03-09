@@ -3,7 +3,12 @@ import { index, integer, jsonb, pgEnum, pgTable, text, timestamp, uuid } from "d
 // ─── Enums ───────────────────────────────────────────────────────────────────
 
 export const userRoleEnum = pgEnum("user_role", ["admin", "standard_user"]);
+// Intentionally separate from stagingStatusEnum — user account approval status
+// may diverge (e.g. 'suspended') independently of staging content status.
 export const approvalStatusEnum = pgEnum("approval_status", ["pending", "approved", "rejected"]);
+
+// Intentionally separate from approvalStatusEnum — staging content review status
+// may diverge (e.g. 'needs_review') independently of user approval status.
 export const stagingStatusEnum = pgEnum("staging_status", ["pending", "approved", "rejected"]);
 export const targetTypeEnum = pgEnum("target_type", ["exercise", "routine"]);
 export const workoutPhaseEnum = pgEnum("workout_phase", ["warm_up", "the_thang", "mary"]);
@@ -32,7 +37,10 @@ export const users = pgTable("users", {
   role: userRoleEnum("role").notNull().default("standard_user"),
   approvalStatus: approvalStatusEnum("approval_status").notNull().default("pending"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date()),
 });
 
 export const exercises = pgTable(
@@ -42,14 +50,18 @@ export const exercises = pgTable(
     name: text("name").notNull(),
     description: text("description").notNull(),
     exiconId: integer("exicon_id"),
-    phases: workoutPhaseEnum("phases").array(),
-    bodyParts: bodyPartEnum("body_parts").array(),
-    grouping: groupingEnum("grouping").array(),
-    equipment: equipmentFeatureEnum("equipment").array(),
+    phases: workoutPhaseEnum("phases").array().notNull().default([]),
+    bodyParts: bodyPartEnum("body_parts").array().notNull().default([]),
+    grouping: groupingEnum("grouping").array().notNull().default([]),
+    equipment: equipmentFeatureEnum("equipment").array().notNull().default([]),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
   },
   (table) => [
+    index("exercises_exicon_id_idx").on(table.exiconId),
     index("exercises_phases_idx").using("gin", table.phases),
     index("exercises_body_parts_idx").using("gin", table.bodyParts),
     index("exercises_grouping_idx").using("gin", table.grouping),
@@ -65,14 +77,18 @@ export const routineTemplates = pgTable(
     description: text("description").notNull(),
     exiconId: integer("exicon_id"),
     formatType: routineFormatEnum("format_type").notNull(),
-    phases: workoutPhaseEnum("phases").array(),
-    bodyParts: bodyPartEnum("body_parts").array(),
-    grouping: groupingEnum("grouping").array(),
-    equipment: equipmentFeatureEnum("equipment").array(),
+    phases: workoutPhaseEnum("phases").array().notNull().default([]),
+    bodyParts: bodyPartEnum("body_parts").array().notNull().default([]),
+    grouping: groupingEnum("grouping").array().notNull().default([]),
+    equipment: equipmentFeatureEnum("equipment").array().notNull().default([]),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
   },
   (table) => [
+    index("routine_templates_exicon_id_idx").on(table.exiconId),
     index("routine_templates_phases_idx").using("gin", table.phases),
     index("routine_templates_body_parts_idx").using("gin", table.bodyParts),
     index("routine_templates_grouping_idx").using("gin", table.grouping),
@@ -90,12 +106,15 @@ export const exiconStaging = pgTable(
     rawJson: jsonb("raw_json").notNull(),
     status: stagingStatusEnum("status").notNull().default("pending"),
     targetType: targetTypeEnum("target_type").notNull(),
-    phases: workoutPhaseEnum("phases").array(),
-    bodyParts: bodyPartEnum("body_parts").array(),
-    grouping: groupingEnum("grouping").array(),
-    equipment: equipmentFeatureEnum("equipment").array(),
+    phases: workoutPhaseEnum("phases").array().notNull().default([]),
+    bodyParts: bodyPartEnum("body_parts").array().notNull().default([]),
+    grouping: groupingEnum("grouping").array().notNull().default([]),
+    equipment: equipmentFeatureEnum("equipment").array().notNull().default([]),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
   },
   (table) => [
     index("exicon_staging_phases_idx").using("gin", table.phases),

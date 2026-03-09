@@ -13,7 +13,8 @@
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate"
+    "db:migrate": "drizzle-kit migrate",
+    "test": "echo 'No tests yet'"
   },
   "dependencies": {
     "drizzle-orm": "catalog:",
