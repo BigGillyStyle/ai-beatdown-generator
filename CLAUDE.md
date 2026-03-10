@@ -156,3 +156,9 @@ Converts F3 exicon JSON data to CSV format. Key exports in [packages/exicon-to-c
 - Use `nvm use` to switch to correct Node version
 - Run `pnpm install` after pulling changes
 - Run `pnpm build` before running tests (tests run on compiled output)
+
+## Next.js Bundled Documentation
+
+When working on `apps/beatdown-app/`, read the bundled Next.js 16 docs before writing code:
+
+@apps/beatdown-app/AGENTS.md
