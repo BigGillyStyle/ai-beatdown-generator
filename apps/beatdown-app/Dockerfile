@@ -11,7 +11,7 @@ COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY apps/beatdown-app/package.json ./apps/beatdown-app/
 COPY packages/exicon-to-csv/package.json ./packages/exicon-to-csv/
 
-RUN pnpm install --frozen-lockfile
+RUN LEFTHOOK=0 pnpm install --frozen-lockfile
 
 # ---- builder stage ----
 FROM node:24-alpine AS builder
