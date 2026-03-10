@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "description": "AI Beatdown Generator web application",
   "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.11.1"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",

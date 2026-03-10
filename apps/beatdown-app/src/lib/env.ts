@@ -7,7 +7,9 @@ function requireEnv(name: string): string {
 }
 
 export const env = {
-  databaseUrl: requireEnv("DATABASE_URL"),
+  get databaseUrl() {
+    return requireEnv("DATABASE_URL");
+  },
   nextPublicFirebaseApiKey: process.env["NEXT_PUBLIC_FIREBASE_API_KEY"] ?? "",
   nextPublicFirebaseAuthDomain: process.env["NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN"] ?? "",
   nextPublicFirebaseProjectId: process.env["NEXT_PUBLIC_FIREBASE_PROJECT_ID"] ?? "",
