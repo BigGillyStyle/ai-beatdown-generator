@@ -2,7 +2,7 @@
 
 # ---- deps stage ----
 FROM node:24-alpine AS deps
-RUN corepack enable pnpm
+RUN corepack enable pnpm && apk add --no-cache git
 
 WORKDIR /repo
 
@@ -11,7 +11,7 @@ COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY apps/beatdown-app/package.json ./apps/beatdown-app/
 COPY packages/exicon-to-csv/package.json ./packages/exicon-to-csv/
 
-RUN LEFTHOOK=0 pnpm install --frozen-lockfile
+RUN git init && LEFTHOOK=0 pnpm install --frozen-lockfile
 
 # ---- builder stage ----
 FROM node:24-alpine AS builder
@@ -32,8 +32,7 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
 
 COPY --from=builder /repo/apps/beatdown-app/.next/standalone ./
 COPY --from=builder /repo/apps/beatdown-app/.next/static ./apps/beatdown-app/.next/static
