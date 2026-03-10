@@ -5,7 +5,7 @@ import eslintConfigPrettier from "eslint-config-prettier";
 export default tseslint.config(
   // Ignore patterns
   {
-    ignores: ["**/dist/", "**/node_modules/", "**/.pnpm-store/", "**/*.tsbuildinfo"],
+    ignores: ["**/dist/", "**/node_modules/", "**/.pnpm-store/", "**/*.tsbuildinfo", "**/.next/"],
   },
 
   // Base recommended configs
@@ -14,7 +14,7 @@ export default tseslint.config(
 
   // TypeScript-specific configuration
   {
-    files: ["**/*.ts"],
+    files: ["**/*.ts", "**/*.tsx"],
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {

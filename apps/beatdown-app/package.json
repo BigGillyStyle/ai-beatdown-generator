@@ -2,28 +2,42 @@
   "name": "beatdown-app",
   "version": "0.1.0",
   "description": "AI Beatdown Generator web application",
-  "type": "module",
   "private": true,
-  "main": "dist/index.js",
-  "exports": {
-    ".": "./dist/index.js"
+  "type": "module",
+  "engines": {
+    "node": ">=24.11.1"
   },
   "scripts": {
-    "build": "tsc",
-    "clean": "rm -rf dist",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "clean": "rm -rf .next",
     "typecheck": "tsc --noEmit",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "test": "echo 'No tests yet'"
   },
   "dependencies": {
+    "class-variance-authority": "catalog:",
+    "clsx": "catalog:",
     "drizzle-orm": "catalog:",
-    "postgres": "catalog:"
+    "lucide-react": "catalog:",
+    "next": "catalog:",
+    "postgres": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "tailwind-merge": "catalog:",
+    "tailwindcss": "catalog:"
   },
   "devDependencies": {
-    "@tsconfig/node24": "catalog:",
+    "@tailwindcss/postcss": "catalog:",
     "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "drizzle-kit": "catalog:",
+    "postcss": "catalog:",
     "typescript": "catalog:"
   }
 }
