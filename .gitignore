@@ -36,3 +36,6 @@ Thumbs.db
 # Generated CSV files
 output/
 !output/.gitkeep
+
+# Claude Code files
+docs/
