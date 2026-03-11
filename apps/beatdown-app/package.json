@@ -29,7 +29,10 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "tailwind-merge": "catalog:",
-    "tailwindcss": "catalog:"
+    "tailwindcss": "catalog:",
+    "firebase": "catalog:",
+    "firebase-admin": "catalog:",
+    "resend": "catalog:"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "catalog:",
