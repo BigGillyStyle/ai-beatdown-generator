@@ -1,9 +1,47 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { adminAuth } from "@/lib/firebase-admin";
+import { db } from "@/db";
+import { users } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
-// TODO (Issue #11 — Firebase Auth + Admin Approval Gate): Wire this as middleware.
-// This file will be re-exported from src/middleware.ts once auth is implemented.
-// Protected routes: /(admin)/* requires admin role, /(user)/* requires any authenticated user.
-export function proxy(_request: NextRequest) {
+// Note: In Next.js 16, middleware was renamed to "proxy". This file uses the proxy convention.
+// Proxy defaults to Node.js runtime (stable since v15.5), so firebase-admin works without
+// additional configuration.
+
+const SESSION_COOKIE_NAME = "session";
+
+async function getSessionUser(request: NextRequest) {
+  const sessionCookie = request.cookies.get(SESSION_COOKIE_NAME)?.value;
+  if (!sessionCookie) return null;
+
+  try {
+    const decoded = await adminAuth.verifySessionCookie(sessionCookie, true);
+    const [user] = await db.select().from(users).where(eq(users.firebaseUid, decoded.uid)).limit(1);
+    return user ?? null;
+  } catch {
+    return null;
+  }
+}
+
+export async function proxy(request: NextRequest) {
+  const user = await getSessionUser(request);
+
+  const { pathname } = request.nextUrl;
+  const isAdminRoute = pathname.startsWith("/admin");
+  const isUserRoute = pathname.startsWith("/generate");
+
+  if (!user) {
+    return NextResponse.redirect(new URL("/sign-in", request.url));
+  }
+
+  if (isAdminRoute && user.role !== "admin") {
+    return NextResponse.redirect(new URL("/generate", request.url));
+  }
+
+  if (isUserRoute && user.approvalStatus !== "approved") {
+    return NextResponse.redirect(new URL("/pending", request.url));
+  }
+
   return NextResponse.next();
 }
 
