@@ -14,24 +14,28 @@ export default function RegisterPage() {
     setError(null);
     setLoading(true);
 
-    const response = await fetch("/api/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    });
+    try {
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
 
-    setLoading(false);
+      if (response.ok) {
+        router.push("/pending");
+        return;
+      }
 
-    if (response.ok) {
-      router.push("/pending");
-      return;
-    }
-
-    const data = (await response.json()) as { error?: string };
-    if (response.status === 409) {
-      setError("That email is already registered. Try signing in instead.");
-    } else {
-      setError(data.error ?? "Something went wrong. Please try again.");
+      const data = (await response.json()) as { error?: string };
+      if (response.status === 409) {
+        setError("That email is already registered. Try signing in instead.");
+      } else {
+        setError(data.error ?? "Something went wrong. Please try again.");
+      }
+    } catch {
+      setError("Network error. Please check your connection and try again.");
+    } finally {
+      setLoading(false);
     }
   }
 
