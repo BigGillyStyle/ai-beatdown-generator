@@ -5,8 +5,7 @@ import { useRouter } from "next/navigation";
 import { isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";
 import { getFirebaseAuth } from "@/lib/firebase-client";
 import { EMAIL_LOCAL_STORAGE_KEY } from "../constants";
-
-type Status = "loading" | "needs-email" | "error" | "done";
+import type { Status } from "./types";
 
 export default function SignInConfirmPage() {
   const router = useRouter();
