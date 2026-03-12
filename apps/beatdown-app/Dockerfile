@@ -23,6 +23,14 @@ COPY --from=deps /repo/node_modules ./node_modules
 COPY --from=deps /repo/apps/beatdown-app/node_modules ./apps/beatdown-app/node_modules
 COPY . .
 
+# Public vars baked into the JS bundle — safe to pass as build args
+ARG NEXT_PUBLIC_FIREBASE_API_KEY
+ARG NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+ARG NEXT_PUBLIC_FIREBASE_PROJECT_ID
+ENV NEXT_PUBLIC_FIREBASE_API_KEY=$NEXT_PUBLIC_FIREBASE_API_KEY
+ENV NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=$NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+ENV NEXT_PUBLIC_FIREBASE_PROJECT_ID=$NEXT_PUBLIC_FIREBASE_PROJECT_ID
+
 RUN pnpm --filter beatdown-app run build
 
 # ---- runner stage ----
