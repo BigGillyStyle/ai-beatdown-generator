@@ -19,9 +19,8 @@ services:
     build:
       context: ../../
       dockerfile: apps/beatdown-app/Dockerfile
-    environment:
-      DATABASE_URL: postgres://postgres:postgres@db:5432/beatdown
-      NODE_ENV: development
+    env_file:
+      - .env.local
     ports:
       - "3000:3000"
     depends_on:

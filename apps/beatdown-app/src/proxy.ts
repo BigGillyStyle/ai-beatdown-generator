@@ -27,8 +27,9 @@ export async function proxy(request: NextRequest) {
   const user = await getSessionUser(request);
 
   const { pathname } = request.nextUrl;
-  const isAdminRoute = pathname.startsWith("/admin");
-  const isUserRoute = pathname.startsWith("/generate");
+  const ADMIN_PATHS = ["/exercises", "/exicon", "/routine-templates", "/users"];
+  const isAdminRoute = ADMIN_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+  const isUserRoute = pathname === "/generate" || pathname.startsWith("/generate/");
 
   if (!user) {
     return NextResponse.redirect(new URL("/sign-in", request.url));
@@ -46,5 +47,7 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/(admin)/:path*", "/(user)/:path*"],
+  // Match all paths except public auth pages, auth API routes, and Next.js internals.
+  // Any new route is automatically protected without updating this list.
+  matcher: ["/((?!sign-in|register|pending|api/auth|_next/static|_next/image|favicon.ico).*)"],
 };

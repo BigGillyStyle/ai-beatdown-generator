@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";
-import { auth } from "@/lib/firebase-client";
+import { getFirebaseAuth } from "@/lib/firebase-client";
 
 const EMAIL_LOCAL_STORAGE_KEY = "emailForSignIn";
 
@@ -16,7 +16,7 @@ export default function SignInConfirmPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!isSignInWithEmailLink(auth, window.location.href)) {
+    if (!isSignInWithEmailLink(getFirebaseAuth(), window.location.href)) {
       router.replace("/sign-in");
       return;
     }
@@ -31,7 +31,7 @@ export default function SignInConfirmPage() {
   async function completeSignIn(email: string) {
     setStatus("loading");
     try {
-      const result = await signInWithEmailLink(auth, email, window.location.href);
+      const result = await signInWithEmailLink(getFirebaseAuth(), email, window.location.href);
       window.localStorage.removeItem(EMAIL_LOCAL_STORAGE_KEY);
       const idToken = await result.user.getIdToken();
 

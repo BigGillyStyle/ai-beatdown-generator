@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { sendSignInLinkToEmail } from "firebase/auth";
-import { auth } from "@/lib/firebase-client";
+import { getFirebaseAuth } from "@/lib/firebase-client";
 
 const EMAIL_LOCAL_STORAGE_KEY = "emailForSignIn";
 
@@ -23,7 +23,7 @@ export default function SignInPage() {
     };
 
     try {
-      await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+      await sendSignInLinkToEmail(getFirebaseAuth(), email, actionCodeSettings);
       window.localStorage.setItem(EMAIL_LOCAL_STORAGE_KEY, email);
       setSent(true);
     } catch (err: unknown) {
