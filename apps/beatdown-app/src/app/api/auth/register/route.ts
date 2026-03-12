@@ -35,6 +35,10 @@ export async function POST(request: Request) {
     await getAdminAuth()
       .deleteUser(firebaseUid)
       .catch(() => undefined);
+    // Unique constraint violation — email already in DB
+    if ((err as { code?: string }).code === "23505") {
+      return NextResponse.json({ error: "Email already registered" }, { status: 409 });
+    }
     console.error("DB insert error:", err);
     return NextResponse.json({ error: "Failed to create account" }, { status: 500 });
   }
