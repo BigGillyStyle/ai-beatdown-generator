@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { adminAuth } from "@/lib/firebase-admin";
+import { getAdminAuth } from "@/lib/firebase-admin";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
@@ -21,7 +21,7 @@ export async function POST(request: Request) {
 
   let firebaseUid: string;
   try {
-    const decoded = await adminAuth.verifyIdToken(idToken);
+    const decoded = await getAdminAuth().verifyIdToken(idToken);
     firebaseUid = decoded.uid;
   } catch {
     return NextResponse.json({ error: "Invalid token" }, { status: 401 });
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ redirectTo: "/pending" }, { status: 200 });
   }
 
-  const sessionCookie = await adminAuth.createSessionCookie(idToken, { expiresIn: SESSION_DURATION_MS });
+  const sessionCookie = await getAdminAuth().createSessionCookie(idToken, { expiresIn: SESSION_DURATION_MS });
 
   const response = NextResponse.json({ redirectTo: "/generate" }, { status: 200 });
   response.cookies.set(SESSION_COOKIE_NAME, sessionCookie, {

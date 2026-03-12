@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { adminAuth } from "@/lib/firebase-admin";
+import { getAdminAuth } from "@/lib/firebase-admin";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 
@@ -17,7 +17,7 @@ export async function POST(request: Request) {
 
   let firebaseUid: string;
   try {
-    const userRecord = await adminAuth.createUser({ email });
+    const userRecord = await getAdminAuth().createUser({ email });
     firebaseUid = userRecord.uid;
   } catch (err: unknown) {
     const code = (err as { code?: string }).code;
@@ -32,7 +32,9 @@ export async function POST(request: Request) {
     await db.insert(users).values({ firebaseUid, email });
   } catch (err) {
     // Roll back Firebase user if DB insert fails
-    await adminAuth.deleteUser(firebaseUid).catch(() => undefined);
+    await getAdminAuth()
+      .deleteUser(firebaseUid)
+      .catch(() => undefined);
     console.error("DB insert error:", err);
     return NextResponse.json({ error: "Failed to create account" }, { status: 500 });
   }
