@@ -2,6 +2,7 @@
 **/.next
 **/dist
 **/.git
-**/.env*.example
+**/.env*
+!apps/beatdown-app/.env.local
 **/coverage
 **/*.log
