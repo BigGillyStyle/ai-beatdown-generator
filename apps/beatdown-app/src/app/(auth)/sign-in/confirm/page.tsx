@@ -4,8 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";
 import { getFirebaseAuth } from "@/lib/firebase-client";
-
-const EMAIL_LOCAL_STORAGE_KEY = "emailForSignIn";
+import { EMAIL_LOCAL_STORAGE_KEY } from "../constants";
 
 type Status = "loading" | "needs-email" | "error" | "done";
 

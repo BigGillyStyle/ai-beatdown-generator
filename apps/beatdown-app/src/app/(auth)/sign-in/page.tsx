@@ -3,8 +3,7 @@
 import { useState } from "react";
 import { sendSignInLinkToEmail } from "firebase/auth";
 import { getFirebaseAuth } from "@/lib/firebase-client";
-
-const EMAIL_LOCAL_STORAGE_KEY = "emailForSignIn";
+import { EMAIL_LOCAL_STORAGE_KEY } from "./constants";
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
