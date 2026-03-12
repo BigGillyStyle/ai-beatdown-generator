@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function PendingPage() {
   return (
     <main className="flex min-h-screen items-center justify-center">
@@ -6,9 +8,9 @@ export default function PendingPage() {
         <p className="text-sm text-muted-foreground">Your request has been received. An admin will review your request and we&apos;ll email you once the review is complete.</p>
         <p className="text-sm text-muted-foreground">
           Already received your access email?{" "}
-          <a href="/sign-in" className="underline hover:text-foreground">
+          <Link href="/sign-in" className="underline hover:text-foreground">
             Sign in here
-          </a>
+          </Link>
           .
         </p>
       </div>
