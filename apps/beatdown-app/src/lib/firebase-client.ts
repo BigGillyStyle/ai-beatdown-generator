@@ -8,6 +8,11 @@ let _auth: Auth | undefined;
 
 export function getFirebaseAuth(): Auth {
   if (_auth) return _auth;
+  if (!env.nextPublicFirebaseApiKey || !env.nextPublicFirebaseProjectId || !env.nextPublicFirebaseAuthDomain) {
+    throw new Error(
+      "Firebase client configuration is missing. Check NEXT_PUBLIC_FIREBASE_API_KEY, NEXT_PUBLIC_FIREBASE_PROJECT_ID, and NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN environment variables."
+    );
+  }
   const app =
     getApps().length > 0
       ? getApps()[0]!
