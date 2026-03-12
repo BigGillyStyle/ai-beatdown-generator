@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";
 import { getFirebaseAuth } from "@/lib/firebase-client";
@@ -92,9 +93,9 @@ export default function SignInConfirmPage() {
         <div className="w-full max-w-sm space-y-4 px-4 text-center">
           <h1 className="text-2xl font-bold">Sign-in failed</h1>
           <p className="text-sm text-destructive">{error}</p>
-          <a href="/sign-in" className="text-sm underline hover:text-foreground">
+          <Link href="/sign-in" className="text-sm underline hover:text-foreground">
             Try again
-          </a>
+          </Link>
         </div>
       </main>
     );

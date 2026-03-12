@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { sendSignInLinkToEmail } from "firebase/auth";
 import { getFirebaseAuth } from "@/lib/firebase-client";
 import { EMAIL_LOCAL_STORAGE_KEY } from "./constants";
@@ -79,9 +80,9 @@ export default function SignInPage() {
         </form>
         <p className="text-center text-sm text-muted-foreground">
           Don&apos;t have access?{" "}
-          <a href="/register" className="underline hover:text-foreground">
+          <Link href="/register" className="underline hover:text-foreground">
             Request access
-          </a>
+          </Link>
         </p>
       </div>
     </main>
