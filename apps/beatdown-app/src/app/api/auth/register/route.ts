@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getAdminAuth } from "@/lib/firebase-admin";
-import { db } from "@/db";
+import { getDb } from "@/db";
 import { users } from "@/db/schema";
 
 export async function POST(request: Request) {
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    await db.insert(users).values({ firebaseUid, email });
+    await getDb().insert(users).values({ firebaseUid, email });
   } catch (err) {
     // Roll back Firebase user if DB insert fails
     await getAdminAuth()

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getAdminAuth } from "@/lib/firebase-admin";
-import { db } from "@/db";
+import { getDb } from "@/db";
 import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid token" }, { status: 401 });
   }
 
-  const [user] = await db.select().from(users).where(eq(users.firebaseUid, firebaseUid)).limit(1);
+  const [user] = await getDb().select().from(users).where(eq(users.firebaseUid, firebaseUid)).limit(1);
 
   if (!user || user.approvalStatus !== "approved") {
     return NextResponse.json({ redirectTo: "/pending" }, { status: 200 });

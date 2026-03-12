@@ -1,9 +1,15 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as schema from "./schema";
+import { env } from "@/lib/env";
 
-// postgres is lazy — it doesn't connect until the first query.
-// Throwing at module level breaks `next build` which evaluates modules without runtime env vars.
-// Connection errors surface naturally at query time if DATABASE_URL is absent at runtime.
-const queryClient = postgres(process.env["DATABASE_URL"]!);
-export const db = drizzle({ client: queryClient, schema });
+// Lazy initialization: defers postgres() until first query so next build succeeds
+// without DATABASE_URL. Missing DATABASE_URL surfaces via env.databaseUrl at query time.
+let _db: ReturnType<typeof drizzle<typeof schema>> | undefined;
+
+export function getDb() {
+  if (!_db) {
+    _db = drizzle({ client: postgres(env.databaseUrl), schema });
+  }
+  return _db;
+}

@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { getAdminAuth } from "@/lib/firebase-admin";
-import { db } from "@/db";
+import { getDb } from "@/db";
 import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
@@ -16,7 +16,7 @@ async function getSessionUser(request: NextRequest) {
 
   try {
     const decoded = await getAdminAuth().verifySessionCookie(sessionCookie, true);
-    const [user] = await db.select().from(users).where(eq(users.firebaseUid, decoded.uid)).limit(1);
+    const [user] = await getDb().select().from(users).where(eq(users.firebaseUid, decoded.uid)).limit(1);
     return user ?? null;
   } catch {
     return null;
