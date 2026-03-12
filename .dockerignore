@@ -3,5 +3,6 @@
 **/dist
 **/.git
 **/.env*
+!apps/beatdown-app/.env.local
 **/coverage
 **/*.log
