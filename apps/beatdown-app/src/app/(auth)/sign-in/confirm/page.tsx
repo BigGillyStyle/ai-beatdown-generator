@@ -17,7 +17,12 @@ export default function SignInConfirmPage() {
     async (email: string) => {
       setStatus("loading");
       try {
-        const result = await signInWithEmailLink(getFirebaseAuth(), email, window.location.href);
+        const normalizedEmail = email.trim();
+        if (!normalizedEmail) {
+          setStatus("needs-email");
+          return;
+        }
+        const result = await signInWithEmailLink(getFirebaseAuth(), normalizedEmail, window.location.href);
         window.localStorage.removeItem(EMAIL_LOCAL_STORAGE_KEY);
         const idToken = await result.user.getIdToken();
 
@@ -47,7 +52,16 @@ export default function SignInConfirmPage() {
   );
 
   useEffect(() => {
-    if (!isSignInWithEmailLink(getFirebaseAuth(), window.location.href)) {
+    let auth;
+    try {
+      auth = getFirebaseAuth();
+    } catch (err: unknown) {
+      console.error("Failed to initialize Firebase auth:", err);
+      setError("Sign-in is temporarily unavailable. Please try again.");
+      setStatus("error");
+      return;
+    }
+    if (!isSignInWithEmailLink(auth, window.location.href)) {
       router.replace("/sign-in");
       return;
     }

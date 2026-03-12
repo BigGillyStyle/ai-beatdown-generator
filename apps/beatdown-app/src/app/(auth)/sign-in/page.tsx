@@ -22,8 +22,10 @@ export default function SignInPage() {
     };
 
     try {
-      await sendSignInLinkToEmail(getFirebaseAuth(), email, actionCodeSettings);
-      window.localStorage.setItem(EMAIL_LOCAL_STORAGE_KEY, email);
+      const normalizedEmail = email.trim();
+      await sendSignInLinkToEmail(getFirebaseAuth(), normalizedEmail, actionCodeSettings);
+      window.localStorage.setItem(EMAIL_LOCAL_STORAGE_KEY, normalizedEmail);
+      setEmail(normalizedEmail);
       setSent(true);
     } catch (err: unknown) {
       console.error("Failed to send sign-in link:", err);
