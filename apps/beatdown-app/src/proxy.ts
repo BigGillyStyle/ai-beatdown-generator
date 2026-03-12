@@ -3,25 +3,11 @@ import { getAdminAuth } from "@/lib/firebase-admin";
 import { getDb } from "@/db";
 import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { SESSION_COOKIE_NAME } from "@/lib/session";
 
 // Note: In Next.js 16, middleware was renamed to "proxy". This file uses the proxy convention.
 // Proxy defaults to Node.js runtime (stable since v15.5), so firebase-admin works without
 // additional configuration.
-
-const SESSION_COOKIE_NAME = "session";
-
-async function getSessionUser(request: NextRequest) {
-  const sessionCookie = request.cookies.get(SESSION_COOKIE_NAME)?.value;
-  if (!sessionCookie) return null;
-
-  try {
-    const decoded = await getAdminAuth().verifySessionCookie(sessionCookie, true);
-    const [user] = await getDb().select().from(users).where(eq(users.firebaseUid, decoded.uid)).limit(1);
-    return user ?? null;
-  } catch {
-    return null;
-  }
-}
 
 export async function proxy(request: NextRequest) {
   const user = await getSessionUser(request);
@@ -51,3 +37,17 @@ export const config = {
   // Any new route is automatically protected without updating this list.
   matcher: ["/((?!sign-in|register|pending|api/auth|_next/static|_next/image|favicon.ico).*)"],
 };
+
+async function getSessionUser(request: NextRequest) {
+  const sessionCookie = request.cookies.get(SESSION_COOKIE_NAME)?.value;
+  if (!sessionCookie) return null;
+
+  try {
+    const decoded = await getAdminAuth().verifySessionCookie(sessionCookie, true);
+    const [user] = await getDb().select().from(users).where(eq(users.firebaseUid, decoded.uid)).limit(1);
+    return user ?? null;
+  } catch (error) {
+    console.error("Session verification failed:", error);
+    return null;
+  }
+}
