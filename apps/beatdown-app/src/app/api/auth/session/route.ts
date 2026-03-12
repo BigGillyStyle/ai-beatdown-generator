@@ -39,7 +39,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ redirectTo: "/pending" }, { status: 200 });
   }
 
-  const sessionCookie = await getAdminAuth().createSessionCookie(idToken, { expiresIn: SESSION_DURATION_MS });
+  let sessionCookie: string;
+  try {
+    sessionCookie = await getAdminAuth().createSessionCookie(idToken, { expiresIn: SESSION_DURATION_MS });
+  } catch (err) {
+    console.error("createSessionCookie error:", err);
+    return NextResponse.json({ error: "Failed to create session" }, { status: 500 });
+  }
 
   const response = NextResponse.json({ redirectTo: "/generate" }, { status: 200 });
   response.cookies.set(SESSION_COOKIE_NAME, sessionCookie, {

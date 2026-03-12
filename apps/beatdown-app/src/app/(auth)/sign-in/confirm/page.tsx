@@ -38,8 +38,8 @@ export default function SignInConfirmPage() {
         setStatus("done");
         router.replace(data.redirectTo ?? "/generate");
       } catch (err: unknown) {
-        const message = (err as { message?: string }).message ?? "Sign-in failed. Please try again.";
-        setError(message);
+        console.error("Sign-in confirmation failed:", err);
+        setError("Sign-in failed. Please try again.");
         setStatus("error");
       }
     },
@@ -59,7 +59,7 @@ export default function SignInConfirmPage() {
     }
   }, [router, completeSignIn]);
 
-  function handleEmailSubmit(e: React.FormEvent) {
+  function handleEmailSubmit(e: React.SyntheticEvent) {
     e.preventDefault();
     void completeSignIn(emailInput);
   }
