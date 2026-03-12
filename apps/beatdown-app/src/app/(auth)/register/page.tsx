@@ -47,7 +47,11 @@ export default function RegisterPage() {
           <p className="mt-2 text-sm text-muted-foreground">Enter your email to request access to the AI Beatdown Generator.</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
+          <label htmlFor="email" className="sr-only">
+            Email address
+          </label>
           <input
+            id="email"
             type="email"
             required
             value={email}

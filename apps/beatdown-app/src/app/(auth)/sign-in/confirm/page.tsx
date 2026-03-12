@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";
 import { getFirebaseAuth } from "@/lib/firebase-client";
@@ -13,6 +13,39 @@ export default function SignInConfirmPage() {
   const [emailInput, setEmailInput] = useState("");
   const [error, setError] = useState<string | null>(null);
 
+  const completeSignIn = useCallback(
+    async (email: string) => {
+      setStatus("loading");
+      try {
+        const result = await signInWithEmailLink(getFirebaseAuth(), email, window.location.href);
+        window.localStorage.removeItem(EMAIL_LOCAL_STORAGE_KEY);
+        const idToken = await result.user.getIdToken();
+
+        const response = await fetch("/api/auth/session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ idToken }),
+        });
+
+        const data = (await response.json()) as { redirectTo?: string; error?: string };
+
+        if (!response.ok) {
+          setError(data.error ?? "Sign-in failed. Please try again.");
+          setStatus("error");
+          return;
+        }
+
+        setStatus("done");
+        router.replace(data.redirectTo ?? "/generate");
+      } catch (err: unknown) {
+        const message = (err as { message?: string }).message ?? "Sign-in failed. Please try again.";
+        setError(message);
+        setStatus("error");
+      }
+    },
+    [router]
+  );
+
   useEffect(() => {
     if (!isSignInWithEmailLink(getFirebaseAuth(), window.location.href)) {
       router.replace("/sign-in");
@@ -24,37 +57,7 @@ export default function SignInConfirmPage() {
     } else {
       void completeSignIn(stored);
     }
-  }, [router]);
-
-  async function completeSignIn(email: string) {
-    setStatus("loading");
-    try {
-      const result = await signInWithEmailLink(getFirebaseAuth(), email, window.location.href);
-      window.localStorage.removeItem(EMAIL_LOCAL_STORAGE_KEY);
-      const idToken = await result.user.getIdToken();
-
-      const response = await fetch("/api/auth/session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ idToken }),
-      });
-
-      const data = (await response.json()) as { redirectTo?: string; error?: string };
-
-      if (!response.ok) {
-        setError(data.error ?? "Sign-in failed. Please try again.");
-        setStatus("error");
-        return;
-      }
-
-      setStatus("done");
-      router.replace(data.redirectTo ?? "/generate");
-    } catch (err: unknown) {
-      const message = (err as { message?: string }).message ?? "Sign-in failed. Please try again.";
-      setError(message);
-      setStatus("error");
-    }
-  }
+  }, [router, completeSignIn]);
 
   function handleEmailSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -92,7 +95,11 @@ export default function SignInConfirmPage() {
           <p className="mt-2 text-sm text-muted-foreground">It looks like you opened this link on a different device. Enter your email to complete sign-in.</p>
         </div>
         <form onSubmit={handleEmailSubmit} className="space-y-4">
+          <label htmlFor="email" className="sr-only">
+            Email address
+          </label>
           <input
+            id="email"
             type="email"
             required
             value={emailInput}

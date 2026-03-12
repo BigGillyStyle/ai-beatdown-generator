@@ -26,8 +26,8 @@ export default function SignInPage() {
       window.localStorage.setItem(EMAIL_LOCAL_STORAGE_KEY, email);
       setSent(true);
     } catch (err: unknown) {
-      const message = (err as { message?: string }).message ?? "Failed to send link. Please try again.";
-      setError(message);
+      console.error("Failed to send sign-in link:", err);
+      setError("Failed to send link. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -54,7 +54,11 @@ export default function SignInPage() {
           <p className="mt-2 text-sm text-muted-foreground">Enter your email and we&apos;ll send you a magic link.</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
+          <label htmlFor="email" className="sr-only">
+            Email address
+          </label>
           <input
+            id="email"
             type="email"
             required
             value={email}
