@@ -1,8 +1,8 @@
-import { Resend } from "resend";
 import { env } from "@/lib/env";
+import { Resend } from "resend";
 
 const resend = new Resend(env.resendApiKey);
-const FROM = "AI Beatdown Generator <noreply@yourdomain.com>";
+const FROM = "AI Beatdown Generator <onboarding@resend.dev>";
 
 // Resend v6: emails.send() returns { data, error } — always check error before assuming success.
 // `to` must be an array.
