@@ -27,7 +27,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid token" }, { status: 401 });
   }
 
-  const [user] = await getDb().select().from(users).where(eq(users.firebaseUid, firebaseUid)).limit(1);
+  let user: typeof users.$inferSelect | undefined;
+  try {
+    const [row] = await getDb().select().from(users).where(eq(users.firebaseUid, firebaseUid)).limit(1);
+    user = row;
+  } catch (err) {
+    console.error("DB query error in /api/auth/session:", err);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
 
   if (!user || user.approvalStatus !== "approved") {
     return NextResponse.json({ redirectTo: "/pending" }, { status: 200 });
