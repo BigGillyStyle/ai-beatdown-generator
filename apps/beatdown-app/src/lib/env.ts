@@ -11,6 +11,10 @@ export const env = {
     return requireEnv("DATABASE_URL");
   },
 
+  get appUrl() {
+    return requireEnv("APP_URL");
+  },
+
   nextPublicFirebaseApiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY ?? "",
 
   nextPublicFirebaseAuthDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN ?? "",
