@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
 import { getAdminAuth } from "@/lib/firebase-admin";
+import { SESSION_COOKIE_NAME } from "@/lib/session";
 import { getDb } from "@/db";
 import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
-
-const SESSION_COOKIE_NAME = "session";
 const SESSION_DURATION_MS = 60 * 60 * 24 * 14 * 1000; // 14 days
 
 export async function POST(request: Request) {

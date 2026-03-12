@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-
-const SESSION_COOKIE_NAME = "session";
+import { SESSION_COOKIE_NAME } from "@/lib/session";
 
 export async function POST() {
   const response = NextResponse.json({ ok: true }, { status: 200 });
