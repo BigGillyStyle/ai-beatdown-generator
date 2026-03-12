@@ -5,6 +5,7 @@ const resend = new Resend(env.resendApiKey);
 const FROM = "AI Beatdown Generator <onboarding@resend.dev>";
 
 export async function sendApprovalEmail(to: string): Promise<void> {
+  console.log(`[sendApprovalEmail] Sending to: ${to}`);
   const { error } = await resend.emails.send({
     from: FROM,
     to: [to],
@@ -12,5 +13,9 @@ export async function sendApprovalEmail(to: string): Promise<void> {
     html: `<p>Great news! Your request to access the AI Beatdown Generator has been approved.</p>
            <p><a href="${env.appUrl}/sign-in">Sign in now</a></p>`,
   });
-  if (error) throw new Error(`Resend error: ${error.message}`);
+  if (error) {
+    console.error(`[sendApprovalEmail] Failed for ${to}:`, error);
+    throw new Error(`Resend error: ${error.message}`);
+  }
+  console.log(`[sendApprovalEmail] Successfully sent to: ${to}`);
 }

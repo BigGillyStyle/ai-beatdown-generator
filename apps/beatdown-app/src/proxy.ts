@@ -19,19 +19,20 @@ export async function proxy(request: NextRequest) {
   }
 
   const { pathname } = request.nextUrl;
+  const isApiRoute = pathname.startsWith("/api/");
   const ADMIN_PATHS = ["/exercises", "/exicon", "/routine-templates", "/users"];
   const isAdminRoute = ADMIN_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));
 
   if (!user) {
-    return NextResponse.redirect(new URL("/sign-in", request.url));
+    return isApiRoute ? NextResponse.json({ error: "Unauthorized" }, { status: 401 }) : NextResponse.redirect(new URL("/sign-in", request.url));
   }
 
   if (user.approvalStatus !== "approved") {
-    return NextResponse.redirect(new URL("/pending", request.url));
+    return isApiRoute ? NextResponse.json({ error: "Forbidden" }, { status: 403 }) : NextResponse.redirect(new URL("/pending", request.url));
   }
 
   if (isAdminRoute && user.role !== "admin") {
-    return NextResponse.redirect(new URL("/generate", request.url));
+    return isApiRoute ? NextResponse.json({ error: "Forbidden" }, { status: 403 }) : NextResponse.redirect(new URL("/generate", request.url));
   }
 
   return NextResponse.next();
