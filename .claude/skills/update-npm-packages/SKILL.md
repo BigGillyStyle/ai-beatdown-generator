@@ -9,7 +9,7 @@ description: >
   Always invoke this skill before manually editing pnpm-workspace.yaml to bump versions.
 ---
 
-# Update NPM Packages
+# Update PNPM Packages
 
 This workflow keeps dependencies current with safe, incremental updates. It targets only minor and patch releases — changes small enough that they're unlikely to require code modifications — and skips major version bumps, which carry breaking-change risk and warrant deliberate, manual review.
 
@@ -33,11 +33,14 @@ pnpm outdated -r
 
 Classify each outdated package by which semver segment changes between the installed version and the latest available:
 
-| Type  | Example           | Action  |
-| ----- | ----------------- | ------- |
-| Patch | `4.2.1` → `4.2.3` | Include |
-| Minor | `4.2.1` → `4.5.0` | Include |
-| Major | `4.x.x` → `5.x.x` | Skip    |
+| Type        | Example                | Action  |
+| ----------- | ---------------------- | ------- |
+| Patch       | `4.2.1` → `4.2.3`      | Include |
+| Minor       | `4.2.1` → `4.5.0`      | Include |
+| Major       | `4.x.x` → `5.x.x`      | Skip    |
+| Pre-release | `4.2.1` → `5.0.0-rc.1` | Skip    |
+
+Pre-release versions (any version containing `-alpha`, `-beta`, `-rc`, or similar suffixes) are treated as major bumps regardless of their base version number and should always be skipped.
 
 Collect the full list of packages with minor or patch updates.
 
@@ -100,4 +103,6 @@ Package updates can introduce type incompatibilities. If typecheck fails, surfac
 
 Use the `commit-commands:commit-push-pr` skill.
 
-Suggested commit message: `chore: update npm packages (minor/patch) YYYY-MM-DD`
+Suggested commit message: `chore: update pnpm packages (minor/patch) YYYY-MM-DD`
+
+Note: The Lefthook pre-commit hook runs `pnpm lint:fix` and `pnpm format` automatically on commit — no need to run them manually.
