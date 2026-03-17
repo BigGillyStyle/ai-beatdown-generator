@@ -1,7 +1,7 @@
 ---
-name: update-npm-packages
+name: update-pnpm-packages
 description: >
-  Use when the user wants to update NPM packages, check for outdated dependencies,
+  Use when the user wants to update PNPM packages, check for outdated dependencies,
   bump package versions, or keep dependencies up to date in this PNPM workspace.
   Trigger when the user says things like "update packages", "update npm packages",
   "bump dependencies", "check for outdated packages", "upgrade packages", "dependency
@@ -68,7 +68,7 @@ Then lay out these steps:
 ### 1. Create feature branch
 
 ```bash
-git checkout -b task/update-npm-packages-YYYY-MM-DD
+git checkout -b task/update-pnpm-packages-YYYY-MM-DD
 ```
 
 ### 2. Bump versions in the correct files
