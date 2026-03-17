@@ -105,19 +105,19 @@ pnpm update -r
 pnpm typecheck
 ```
 
-Package updates can introduce type incompatibilities. If typecheck fails, revert the version bump for the offending package in `pnpm-workspace.yaml` (or the relevant `package.json`), then re-run typecheck before continuing. Do not commit broken types.
+Package updates can introduce type incompatibilities. If typecheck fails, revert the version bump for the offending package in `pnpm-workspace.yaml`, then re-run typecheck before continuing. If the failing package is hardcoded in a `package.json`, route through the policy-drift decision from Step 2 (migrate to catalog or skip) instead of editing that `package.json` directly. Do not commit broken types.
 
 ### 5. Commit, push, and open a PR
 
 Use the `commit-commands:commit-push-pr` skill.
 
-If the `commit-commands` plugin is unavailable, run these steps manually:
+If the `commit-commands` plugin is unavailable, run these steps manually (substitute `YYYY-MM-DD` with today's date):
 
 ```bash
-git add -A
+git add pnpm-workspace.yaml pnpm-lock.yaml
 git commit -m "chore: update pnpm packages (minor/patch) YYYY-MM-DD"
 git push -u origin HEAD
-gh pr create --title "chore: update pnpm packages (minor/patch) YYYY-MM-DD" --body "Routine minor/patch dependency updates. See plan table for details."
+gh pr create --title "chore: update pnpm packages (minor/patch) YYYY-MM-DD" --body "Routine minor/patch dependency updates (minor and patch only — no major bumps)."
 ```
 
 Suggested commit message: `chore: update pnpm packages (minor/patch) YYYY-MM-DD`
