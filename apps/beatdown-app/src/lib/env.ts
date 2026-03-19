@@ -19,6 +19,11 @@ export const env = {
     return requireEnv("BETTER_AUTH_URL");
   },
 
-  resendApiKey: process.env["RESEND_API_KEY"] ?? "",
-  anthropicApiKey: process.env["ANTHROPIC_API_KEY"] ?? "",
+  get resendApiKey() {
+    return requireEnv("RESEND_API_KEY");
+  },
+
+  get anthropicApiKey() {
+    return requireEnv("ANTHROPIC_API_KEY");
+  },
 };
