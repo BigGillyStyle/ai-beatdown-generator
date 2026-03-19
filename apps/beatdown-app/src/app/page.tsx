@@ -21,7 +21,8 @@ export default function HomePage() {
       } else {
         setSent(true);
       }
-    } catch {
+    } catch (err) {
+      console.error("Magic link request failed:", err);
       setError("Failed to send link. Please try again.");
     } finally {
       setLoading(false);
