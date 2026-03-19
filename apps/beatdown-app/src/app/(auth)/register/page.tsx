@@ -71,7 +71,7 @@ export default function RegisterPage() {
         </form>
         <p className="text-center text-sm text-muted-foreground">
           Already approved?{" "}
-          <Link href="/sign-in" className="underline hover:text-foreground">
+          <Link href="/" className="underline hover:text-foreground">
             Sign in
           </Link>
         </p>

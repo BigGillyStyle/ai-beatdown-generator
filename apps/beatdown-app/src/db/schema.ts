@@ -1,4 +1,4 @@
-import { index, integer, jsonb, pgEnum, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { boolean, index, integer, jsonb, pgEnum, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 // ─── Enums ───────────────────────────────────────────────────────────────────
 
@@ -32,8 +32,10 @@ export const routineFormatEnum = pgEnum("routine_format", ["for_time", "amrap", 
 
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
-  firebaseUid: text("firebase_uid").unique().notNull(),
   email: text("email").unique().notNull(),
+  name: text("name"),
+  emailVerified: boolean("email_verified").notNull().default(false),
+  image: text("image"),
   role: userRoleEnum("role").notNull().default("standard_user"),
   approvalStatus: approvalStatusEnum("approval_status").notNull().default("pending"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
@@ -41,6 +43,28 @@ export const users = pgTable("users", {
     .notNull()
     .defaultNow()
     .$onUpdate(() => new Date()),
+});
+
+export const sessions = pgTable("sessions", {
+  id: text("id").primaryKey(),
+  token: text("token").notNull().unique(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+  ipAddress: text("ip_address"),
+  userAgent: text("user_agent"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const verifications = pgTable("verifications", {
+  id: text("id").primaryKey(),
+  identifier: text("identifier").notNull(),
+  value: text("value").notNull(),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
 export const exercises = pgTable(
