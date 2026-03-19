@@ -19,12 +19,17 @@ export const auth = betterAuth({
       disableSignUp: true,
       expiresIn: 600, // 10 minutes
       sendMagicLink: async ({ email, url }) => {
-        await resend.emails.send({
-          from: "AI Beatdown Generator <onboarding@resend.dev>",
-          to: email,
-          subject: "Your sign-in link",
-          html: `<p>Click <a href="${url}">here</a> to sign in. This link expires in 10 minutes.</p>`,
-        });
+        try {
+          await resend.emails.send({
+            from: "AI Beatdown Generator <onboarding@resend.dev>",
+            to: email,
+            subject: "Your sign-in link",
+            html: `<p>Click <a href="${url}">here</a> to sign in. This link expires in 10 minutes.</p>`,
+          });
+        } catch (err) {
+          console.error("Failed to send magic link email to", email, err);
+          throw err;
+        }
       },
     }),
     nextCookies(),
