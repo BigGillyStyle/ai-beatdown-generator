@@ -15,6 +15,27 @@
       "when": 1773100195727,
       "tag": "0001_burly_the_call",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1773786559784,
+      "tag": "0002_better_auth_add_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1773786576564,
+      "tag": "0003_better_auth_drop_firebase_uid",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1773945485281,
+      "tag": "0004_productive_ben_grimm",
+      "breakpoints": true
     }
   ]
 }

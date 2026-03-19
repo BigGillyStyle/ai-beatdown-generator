@@ -30,8 +30,7 @@
     "react-dom": "catalog:",
     "tailwind-merge": "catalog:",
     "tailwindcss": "catalog:",
-    "firebase": "catalog:",
-    "firebase-admin": "catalog:",
+    "better-auth": "catalog:",
     "resend": "catalog:"
   },
   "devDependencies": {

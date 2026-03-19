@@ -2,11 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
+  const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -23,7 +22,7 @@ export default function RegisterPage() {
       });
 
       if (response.ok) {
-        router.push("/pending");
+        setSubmitted(true);
         return;
       }
 
@@ -38,6 +37,19 @@ export default function RegisterPage() {
     } finally {
       setLoading(false);
     }
+  }
+
+  if (submitted) {
+    return (
+      <main className="flex min-h-screen items-center justify-center">
+        <div className="w-full max-w-sm space-y-4 px-4 text-center">
+          <h1 className="text-2xl font-bold">Request received</h1>
+          <p className="text-sm text-muted-foreground">
+            We&apos;ve received your request for <strong>{email}</strong>. You&apos;ll hear back once an admin reviews it.
+          </p>
+        </div>
+      </main>
+    );
   }
 
   return (
@@ -71,7 +83,7 @@ export default function RegisterPage() {
         </form>
         <p className="text-center text-sm text-muted-foreground">
           Already approved?{" "}
-          <Link href="/sign-in" className="underline hover:text-foreground">
+          <Link href="/" className="underline hover:text-foreground">
             Sign in
           </Link>
         </p>
