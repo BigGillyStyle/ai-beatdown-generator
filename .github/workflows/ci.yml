@@ -36,6 +36,12 @@ jobs:
 
       - name: Build
         run: pnpm build
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          BETTER_AUTH_SECRET: ci-build-placeholder
+          BETTER_AUTH_URL: http://localhost:3000
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/db
+          ANTHROPIC_API_KEY: ci-build-placeholder
 
       - name: Test
         run: pnpm test
