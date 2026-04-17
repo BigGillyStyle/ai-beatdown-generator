@@ -1,0 +1,19 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "schedule": ["every monday"],
+  "prConcurrentLimit": 50,
+  "minimumReleaseAge": "7 days",
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "all non-major dependencies",
+      "groupSlug": "all-minor-patch",
+      "automerge": false
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "groupName": null
+    }
+  ]
+}
