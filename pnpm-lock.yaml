@@ -67,8 +67,8 @@ catalogs:
       specifier: ^2.1.4
       version: 2.1.4
     lucide-react:
-      specifier: ^0.577.0
-      version: 0.577.0
+      specifier: ^1.0.0
+      version: 1.8.0
     next:
       specifier: 16.2.0
       version: 16.2.0
@@ -154,7 +154,7 @@ importers:
         version: 0.45.1(@neondatabase/serverless@1.0.2)(@opentelemetry/api@1.9.0)(@types/pg@8.18.0)(kysely@0.28.13)(postgres@3.4.8)
       lucide-react:
         specifier: 'catalog:'
-        version: 0.577.0(react@19.2.4)
+        version: 1.8.0(react@19.2.4)
       next:
         specifier: 'catalog:'
         version: 16.2.0(@opentelemetry/api@1.9.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -2124,8 +2124,8 @@ packages:
   lodash.upperfirst@4.3.1:
     resolution: {integrity: sha512-sReKOYJIJf74dhJONhU4e0/shzi1trVbSWDOhKYE5XV2O+H7Sb2Dihwuc7xWxVl+DgFPyTqIN3zMfT9cq5iWDg==}
 
-  lucide-react@0.577.0:
-    resolution: {integrity: sha512-4LjoFv2eEPwYDPg/CUdBJQSDfPyzXCRrVW1X7jrx/trgxnxkHFjnVZINbzvzxjN70dxychOfg+FTYwBiS3pQ5A==}
+  lucide-react@1.8.0:
+    resolution: {integrity: sha512-WuvlsjngSk7TnTBJ1hsCy3ql9V9VOdcPkd3PKcSmM34vJD8KG6molxz7m7zbYFgICwsanQWmJ13JlYs4Zp7Arw==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
@@ -4064,7 +4064,7 @@ snapshots:
 
   lodash.upperfirst@4.3.1: {}
 
-  lucide-react@0.577.0(react@19.2.4):
+  lucide-react@1.8.0(react@19.2.4):
     dependencies:
       react: 19.2.4
 
