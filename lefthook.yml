@@ -1,4 +1,4 @@
-# Lefthook configuration for pre-commit hooks
+# Lefthook configuration for pre-commit and commit-msg hooks
 # See: https://github.com/evilmartians/lefthook
 
 pre-commit:
@@ -20,3 +20,9 @@ pre-commit:
     typecheck:
       # Run type checking on entire workspace
       run: pnpm typecheck
+
+commit-msg:
+  commands:
+    commitlint:
+      # Enforce Conventional Commits format
+      run: pnpm commitlint --edit {1}
