@@ -128,7 +128,7 @@ Features and bugs tracked in GitHub Issues as epics and stories. Check for a cor
 
 **Required:**
 
-- Node.js 24.14.0+ (see [.nvmrc](.nvmrc))
-- PNPM 10.26.0+ (enforced by `packageManager` field)
+- Node.js 24.15.0+ (see [.nvmrc](.nvmrc))
+- PNPM 10.33.0+ (enforced by `packageManager` field)
 
 Use `nvm use` to activate the correct Node version.
